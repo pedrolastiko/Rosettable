@@ -283,7 +283,7 @@
   .stat-label { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
 
   /* TABLE */
-  .table-wrap { padding: 0 32px 48px; overflow-x: auto; }
+  .table-wrap { padding: 0 32px 48px; overflow-x: auto; position: relative; }
   .table-inner { max-width: 1400px; margin: 0 auto; }
 
   table {
@@ -292,8 +292,14 @@
     border-spacing: 0;
     border: 1px solid var(--border);
     border-radius: 8px;
-    overflow: hidden;
+    overflow: visible;
     transition: border-color 0.25s;
+  }
+
+  thead {
+    position: sticky;
+    top: 0;
+    z-index: 15;
   }
 
   thead th {
@@ -309,7 +315,7 @@
     white-space: nowrap;
     position: sticky;
     top: 0;
-    z-index: 10;
+    z-index: 20;
     transition: background 0.25s;
   }
   thead th:first-child { border-radius: 8px 0 0 0; width: 200px; min-width: 160px; }
