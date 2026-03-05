@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rosettable</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&display=swap');
+
+  :root {
+    --bg: #f4f6f9;
+    --surface: #ffffff;
+    --surface2: #eef1f6;
+    --border: #dde2ec;
+    --text: #1e2433;
+    --muted: #7a869a;
+    --nist: #2563eb;
+    --iso27: #059669;
+    --iso42: #7c3aed;
+    --cis: #d97706;
+    --itil: #0891b2;
+    --cobit: #e11d48;
+    --h1-color: #0f172a;
+    --stat-color: #0f172a;
+    --domain-name: #0f172a;
+    --ref-text: #475569;
+    --empty-cell: #c8d0dc;
+    --header-bg: linear-gradient(160deg, #e8edf8 0%, #f4f6f9 100%);
+    --header-glow: rgba(37,99,235,0.07);
+    --row-hover: #f0f3f9;
+    --filter-active-bg: #1e2433;
+    --filter-active-color: #ffffff;
+    --filter-active-border: #1e2433;
+    --filter-hover-bg: var(--surface2);
+    --filter-hover-border: #94a3b8;
+    --badge-nist-bg:  #eff4ff;  --badge-nist-border:  rgba(37,99,235,0.25);
+    --badge-iso27-bg: #ecfdf5;  --badge-iso27-border: rgba(5,150,105,0.25);
+    --badge-iso42-bg: #f5f3ff;  --badge-iso42-border: rgba(124,58,237,0.25);
+    --badge-cis-bg:   #fffbeb;  --badge-cis-border:   rgba(217,119,6,0.25);
+    --badge-itil-bg:  #ecfeff;  --badge-itil-border:  rgba(8,145,178,0.25);
+    --badge-cobit-bg: #fff1f2;  --badge-cobit-border: rgba(225,29,72,0.25);
+    --th-nist-bg:  #eff4ff;  --th-iso27-bg: #ecfdf5; --th-iso42-bg: #f5f3ff;
+    --th-cis-bg:   #fffbeb;  --th-itil-bg:  #ecfeff; --th-cobit-bg: #fff1f2;
+    --code-nist-bg:  #dbeafe; --code-iso27-bg: #d1fae5; --code-iso42-bg: #ede9fe;
+    --code-cis-bg:   #fef3c7; --code-itil-bg:  #cffafe; --code-cobit-bg: #ffe4e6;
+    --tag-gov-bg: #f1f5f9;  --tag-gov-c: #475569;
+    --tag-risk-bg:#fff1f2;  --tag-risk-c:#be123c;
+    --tag-ops-bg: #eff6ff;  --tag-ops-c: #1d4ed8;
+    --tag-tech-bg:#ecfdf5;  --tag-tech-c:#065f46;
+    --tag-cyber-bg:#fffbeb; --tag-cyber-c:#92400e;
+    --tag-ia-bg:  #f5f3ff;  --tag-ia-c:  #5b21b6;
+    --toggle-bg: #e2e8f0; --toggle-color: #475569; --toggle-border: #cbd5e1;
+  }
+
+  body.dark {
+    --bg: #0a0c10;
+    --surface: #0f1218;
+    --surface2: #161b24;
+    --border: #1e2736;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --nist: #3b82f6;
+    --iso27: #10b981;
+    --iso42: #a855f7;
+    --cis: #f59e0b;
+    --itil: #06b6d4;
+    --cobit: #f43f5e;
+    --h1-color: #ffffff;
+    --stat-color: #ffffff;
+    --domain-name: #ffffff;
+    --ref-text: #94a3b8;
+    --empty-cell: #1e2736;
+    --header-bg: linear-gradient(180deg, #0d1117 0%, #0a0c10 100%);
+    --header-glow: rgba(59,130,246,0.06);
+    --row-hover: #161b24;
+    --filter-active-bg: #161b24;
+    --filter-active-color: #e2e8f0;
+    --filter-active-border: #334155;
+    --filter-hover-bg: #161b24;
+    --filter-hover-border: #334155;
+    --badge-nist-bg:  rgba(59,130,246,0.08);  --badge-nist-border:  rgba(59,130,246,0.2);
+    --badge-iso27-bg: rgba(16,185,129,0.08);  --badge-iso27-border: rgba(16,185,129,0.2);
+    --badge-iso42-bg: rgba(168,85,247,0.08);  --badge-iso42-border: rgba(168,85,247,0.2);
+    --badge-cis-bg:   rgba(245,158,11,0.08);  --badge-cis-border:   rgba(245,158,11,0.2);
+    --badge-itil-bg:  rgba(6,182,212,0.08);   --badge-itil-border:  rgba(6,182,212,0.2);
+    --badge-cobit-bg: rgba(244,63,94,0.08);   --badge-cobit-border: rgba(244,63,94,0.2);
+    --th-nist-bg:  #0b1220; --th-iso27-bg: #0a1a14; --th-iso42-bg: #120d1a;
+    --th-cis-bg:   #1a1508; --th-itil-bg:  #061418; --th-cobit-bg: #1a080c;
+    --code-nist-bg:  rgba(59,130,246,0.15);  --code-iso27-bg: rgba(16,185,129,0.15);
+    --code-iso42-bg: rgba(168,85,247,0.15);  --code-cis-bg:   rgba(245,158,11,0.15);
+    --code-itil-bg:  rgba(6,182,212,0.15);   --code-cobit-bg: rgba(244,63,94,0.15);
+    --tag-gov-bg: rgba(100,116,139,0.15); --tag-gov-c: #94a3b8;
+    --tag-risk-bg:rgba(239,68,68,0.1);    --tag-risk-c:#f87171;
+    --tag-ops-bg: rgba(59,130,246,0.1);   --tag-ops-c: #93c5fd;
+    --tag-tech-bg:rgba(16,185,129,0.1);   --tag-tech-c:#6ee7b7;
+    --tag-cyber-bg:rgba(245,158,11,0.1);  --tag-cyber-c:#fcd34d;
+    --tag-ia-bg:  rgba(168,85,247,0.1);   --tag-ia-c:  #d8b4fe;
+    --toggle-bg: #1e2736; --toggle-color: #94a3b8; --toggle-border: #334155;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    min-height: 100vh;
+    transition: background 0.25s, color 0.25s;
+  }
+
+  /* HEADER */
+  .header {
+    padding: 40px 32px 28px;
+    border-bottom: 1px solid var(--border);
+    background: var(--header-bg);
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, var(--header-glow) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-inner { max-width: 1400px; margin: 0 auto; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+  .header-text { flex: 1; }
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--h1-color);
+    letter-spacing: -0.03em;
+    margin-bottom: 8px;
+    transition: color 0.25s;
+  }
+  .subtitle {
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 300;
+    max-width: 600px;
+  }
+
+  /* THEME TOGGLE */
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--toggle-border);
+    background: var(--toggle-bg);
+    color: var(--toggle-color);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 4px;
+    user-select: none;
+  }
+  .theme-toggle:hover { opacity: 0.8; }
+  .theme-toggle .toggle-icon { font-size: 14px; line-height: 1; }
+  .toggle-track {
+    width: 32px; height: 18px;
+    border-radius: 9px;
+    background: var(--border);
+    position: relative;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+  body.dark .toggle-track { background: var(--nist); }
+  .toggle-knob {
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: white;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  body.dark .toggle-knob { transform: translateX(14px); }
+
+  /* LEGEND */
+  .legend {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 16px 32px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    max-width: 100%;
+    transition: background 0.25s, border-color 0.25s;
+  }
+  .legend-inner { max-width: 1400px; margin: 0 auto; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; width: 100%; }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px 4px 8px;
+    border-radius: 4px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.15s;
+    letter-spacing: 0.04em;
+  }
+  .badge .dot { width: 7px; height: 7px; border-radius: 50%; }
+  .badge.nist  { color: var(--nist);  background: var(--badge-nist-bg);  border-color: var(--badge-nist-border); }
+  .badge.iso27 { color: var(--iso27); background: var(--badge-iso27-bg); border-color: var(--badge-iso27-border); }
+  .badge.iso42 { color: var(--iso42); background: var(--badge-iso42-bg); border-color: var(--badge-iso42-border); }
+  .badge.cis   { color: var(--cis);   background: var(--badge-cis-bg);   border-color: var(--badge-cis-border); }
+  .badge.itil  { color: var(--itil);  background: var(--badge-itil-bg);  border-color: var(--badge-itil-border); }
+  .badge.cobit { color: var(--cobit); background: var(--badge-cobit-bg); border-color: var(--badge-cobit-border); }
+  .badge.nist  .dot { background: var(--nist); }
+  .badge.iso27 .dot { background: var(--iso27); }
+  .badge.iso42 .dot { background: var(--iso42); }
+  .badge.cis   .dot { background: var(--cis); }
+  .badge.itil  .dot { background: var(--itil); }
+  .badge.cobit .dot { background: var(--cobit); }
+  .badge.inactive { opacity: 0.35; filter: grayscale(0.6); }
+
+  .sep { width: 1px; height: 20px; background: var(--border); }
+  .filter-label { color: var(--muted); font-size: 11px; font-family: 'DM Mono', monospace; letter-spacing: 0.1em; }
+
+  /* FILTERS */
+  .filters {
+    padding: 12px 32px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    transition: background 0.25s;
+  }
+  .filters-inner { max-width: 1400px; margin: 0 auto; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; width: 100%; }
+  .filter-btn {
+    padding: 4px 12px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    background: transparent;
+    color: var(--muted);
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.04em;
+  }
+  .filter-btn:hover { border-color: var(--filter-hover-border); color: var(--text); background: var(--filter-hover-bg); }
+  .filter-btn.active { background: var(--filter-active-bg); color: var(--filter-active-color); border-color: var(--filter-active-border); }
+
+  /* STATS */
+  .stats { max-width: 1400px; margin: 0 auto; padding: 16px 32px; display: flex; gap: 24px; flex-wrap: wrap; }
+  .stat { display: flex; flex-direction: column; }
+  .stat-value { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; color: var(--h1-color); transition: color 0.25s; }
+  .stat-label { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; }
+
+  /* TABLE */
+  .table-wrap { padding: 0 32px 48px; overflow-x: auto; }
+  .table-inner { max-width: 1400px; margin: 0 auto; }
+
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 0.25s;
+  }
+
+  thead th {
+    background: var(--surface2);
+    padding: 12px 14px;
+    text-align: left;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    transition: background 0.25s;
+  }
+  thead th:first-child { border-radius: 8px 0 0 0; width: 200px; min-width: 160px; }
+  thead th.col-nist  { color: var(--nist);  background: var(--th-nist-bg);  border-left: 2px solid var(--nist); }
+  thead th.col-iso27 { color: var(--iso27); background: var(--th-iso27-bg); border-left: 2px solid var(--iso27); }
+  thead th.col-iso42 { color: var(--iso42); background: var(--th-iso42-bg); border-left: 2px solid var(--iso42); }
+  thead th.col-cis   { color: var(--cis);   background: var(--th-cis-bg);   border-left: 2px solid var(--cis); }
+  thead th.col-itil  { color: var(--itil);  background: var(--th-itil-bg);  border-left: 2px solid var(--itil); }
+  thead th.col-cobit { color: var(--cobit); background: var(--th-cobit-bg); border-left: 2px solid var(--cobit); }
+
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--row-hover); }
+  tbody tr.hidden { display: none; }
+
+  tbody td { padding: 12px 14px; vertical-align: top; border-bottom: 1px solid var(--border); font-size: 12px; transition: border-color 0.25s; }
+  tbody tr:last-child td { border-bottom: none; }
+
+  /* DOMAIN CELL */
+  .domain-cell { display: flex; flex-direction: column; gap: 4px; }
+  .domain-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 0.1em; }
+  .domain-name { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600; color: var(--domain-name); line-height: 1.3; transition: color 0.25s; }
+  .domain-tag { display: inline-block; padding: 2px 7px; border-radius: 3px; font-size: 10px; font-family: 'DM Mono', monospace; margin-top: 2px; letter-spacing: 0.05em; }
+  .tag-gov   { background: var(--tag-gov-bg);   color: var(--tag-gov-c); }
+  .tag-risk  { background: var(--tag-risk-bg);  color: var(--tag-risk-c); }
+  .tag-ops   { background: var(--tag-ops-bg);   color: var(--tag-ops-c); }
+  .tag-tech  { background: var(--tag-tech-bg);  color: var(--tag-tech-c); }
+  .tag-cyber { background: var(--tag-cyber-bg); color: var(--tag-cyber-c); }
+  .tag-ia    { background: var(--tag-ia-bg);    color: var(--tag-ia-c); }
+
+  /* NORM CELLS */
+  td.col-nist  { border-left: 1px solid rgba(37,99,235,0.18); }
+  td.col-iso27 { border-left: 1px solid rgba(5,150,105,0.18); }
+  td.col-iso42 { border-left: 1px solid rgba(124,58,237,0.18); }
+  td.col-cis   { border-left: 1px solid rgba(217,119,6,0.18); }
+  td.col-itil  { border-left: 1px solid rgba(8,145,178,0.18); }
+  td.col-cobit { border-left: 1px solid rgba(225,29,72,0.18); }
+
+  .ref-list { display: flex; flex-direction: column; gap: 4px; }
+  .ref-item { display: flex; align-items: flex-start; gap: 6px; line-height: 1.4; }
+  .ref-code { font-family: 'DM Mono', monospace; font-size: 10px; padding: 1px 6px; border-radius: 3px; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+  .code-nist  { background: var(--code-nist-bg);  color: var(--nist); }
+  .code-iso27 { background: var(--code-iso27-bg); color: var(--iso27); }
+  .code-iso42 { background: var(--code-iso42-bg); color: var(--iso42); }
+  .code-cis   { background: var(--code-cis-bg);   color: var(--cis); }
+  .code-itil  { background: var(--code-itil-bg);  color: var(--itil); }
+  .code-cobit { background: var(--code-cobit-bg); color: var(--cobit); }
+
+  .ref-text { color: var(--ref-text); font-size: 12px; transition: color 0.25s; }
+  .empty-cell { color: var(--empty-cell); font-family: 'DM Mono', monospace; font-size: 11px; transition: color 0.25s; }
+
+  .no-results { text-align: center; padding: 48px; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.1em; }
+  #no-results-row { display: none; }
+  #no-results-row.visible { display: table-row; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-text">
+      <div class="eyebrow" data-i18n="eyebrow">Cartographie des référentiels · 2024–2025</div>
+      <h1>Rosettable</h1>
+      <p class="subtitle" data-i18n="subtitle">Comme la pierre de Rosette permettait de déchiffrer trois langues en parallèle, Rosettable traduit et aligne 6 référentiels de sécurité sur 17 domaines — NIST CSF 2.0, ISO 27001, ISO 42001, CIS Controls v8, ITIL v4 &amp; COBIT 2019</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end;flex-shrink:0;">
+    <button class="theme-toggle" id="langBtn" onclick="toggleLanguage()" style="gap:6px;">
+      <span style="font-size:14px;">🌐</span>
+      <span id="langLabel">English</span>
+    </button>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">
+      <span class="toggle-icon" id="themeIcon">🌙</span>
+      <div class="toggle-track"><div class="toggle-knob"></div></div>
+      <span id="themeLabel">Mode sombre</span>
+    </button>
+    </div>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="legend-inner">
+    <span class="filter-label" data-i18n="label_norms">Normes ·</span>
+    <span class="badge nist"  onclick="toggleNorm('nist')"><span class="dot"></span>NIST CSF 2.0</span>
+    <span class="badge iso27" onclick="toggleNorm('iso27')"><span class="dot"></span>ISO 27001:2022</span>
+    <span class="badge iso42" onclick="toggleNorm('iso42')"><span class="dot"></span>ISO 42001:2023</span>
+    <span class="badge cis"   onclick="toggleNorm('cis')"><span class="dot"></span>CIS Controls v8</span>
+    <span class="badge itil"  onclick="toggleNorm('itil')"><span class="dot"></span>ITIL v4</span>
+    <span class="badge cobit" onclick="toggleNorm('cobit')"><span class="dot"></span>COBIT 2019</span>
+    <span class="sep"></span>
+    <span class="filter-label" style="font-size:10px;color:#475569" data-i18n="legend_hint">Cliquer pour masquer une norme</span>
+  </div>
+</div>
+
+<div class="filters">
+  <div class="filters-inner">
+    <span class="filter-label" data-i18n="label_domains">Domaines ·</span>
+    <button class="filter-btn active" onclick="filterDomain('all', this)" data-i18n="f_all">Tous</button>
+    <button class="filter-btn" onclick="filterDomain('gov', this)" data-i18n="f_gov">Gouvernance</button>
+    <button class="filter-btn" onclick="filterDomain('risk', this)" data-i18n="f_risk">Risque</button>
+    <button class="filter-btn" onclick="filterDomain('ops', this)" data-i18n="f_ops">Opérations</button>
+    <button class="filter-btn" onclick="filterDomain('tech', this)" data-i18n="f_tech">Technique</button>
+    <button class="filter-btn" onclick="filterDomain('cyber', this)" data-i18n="f_cyber">Cyber Ops</button>
+    <button class="filter-btn" onclick="filterDomain('ia', this)" data-i18n="f_ia">IA</button>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat"><span class="stat-value">17</span><span class="stat-label" data-i18n="stat_domains">Domaines</span></div>
+  <div class="stat"><span class="stat-value">6</span><span class="stat-label" data-i18n="stat_norms">Normes</span></div>
+  <div class="stat"><span class="stat-value">93</span><span class="stat-label" data-i18n="stat_iso27">Contrôles ISO 27001</span></div>
+  <div class="stat"><span class="stat-value">18</span><span class="stat-label" data-i18n="stat_cis">Contrôles CIS</span></div>
+</div>
+
+<div class="table-wrap">
+  <div class="table-inner">
+  <table id="mainTable">
+    <thead>
+      <tr>
+        <th data-i18n="th_domain">Domaine</th>
+        <th class="col-nist">NIST CSF 2.0</th>
+        <th class="col-iso27">ISO 27001:2022</th>
+        <th class="col-iso42">ISO 42001:2023</th>
+        <th class="col-cis">CIS Controls v8</th>
+        <th class="col-itil">ITIL v4</th>
+        <th class="col-cobit">COBIT 2019</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <!-- 01 GOUVERNANCE & POLITIQUE -->
+      <tr data-domain="gov">
+        <td><div class="domain-cell"><span class="domain-num">01</span><span class="domain-name" data-i18n="d_01_name">Gouvernance &amp; Politique de sécurité</span><span class="domain-tag tag-gov" data-i18n="f_gov">Gouvernance</span></div></td>
+        <td class="col-nist"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-nist">GV.OC</span><span class="ref-text" data-fr="Contexte organisationnel &amp; obligations" data-en="Organizational context &amp; obligations">Contexte organisationnel &amp; obligations</span></div>
+          <div class="ref-item"><span class="ref-code code-nist">GV.RM</span><span class="ref-text" data-fr="Stratégie de gestion des risques" data-en="Risk management strategy">Stratégie de gestion des risques</span></div>
+          <div class="ref-item"><span class="ref-code code-nist">GV.PO</span><span class="ref-text" data-fr="Politique de cybersécurité" data-en="Cybersecurity policy">Politique de cybersécurité</span></div>
+          <div class="ref-item"><span class="ref-code code-nist">GV.OV</span><span class="ref-text" data-fr="Supervision de la stratégie cyber" data-en="Oversight of cybersecurity strategy">Supervision de la stratégie cyber</span></div>
+        </div></td>
+        <td class="col-iso27"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso27">§4–6</span><span class="ref-text" data-fr="Contexte, leadership, planification" data-en="Context, leadership, planning (ISMS clauses)">Contexte, leadership, planification</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.5.1</span><span class="ref-text" data-fr="Politiques de sécurité de l'information" data-en="Information security policies">Politiques de sécurité de l'information</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.5.4</span><span class="ref-text" data-fr="Responsabilités managériales" data-en="Management responsibilities">Responsabilités managériales</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.5.35</span><span class="ref-text" data-fr="Revue indépendante de la sécurité" data-en="Independent review of information security">Revue indépendante de la sécurité</span></div>
+        </div></td>
+        <td class="col-iso42"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso42">§4–6</span><span class="ref-text" data-fr="Contexte organisationnel IA, leadership" data-en="AI organizational context, leadership">Contexte organisationnel IA, leadership</span></div>
+          <div class="ref-item"><span class="ref-code code-iso42">A.2.2</span><span class="ref-text" data-fr="Politique du système de management IA" data-en="AI management system policy">Politique du système de management IA</span></div>
+          <div class="ref-item"><span class="ref-code code-iso42">A.6.1</span><span class="ref-text" data-fr="Attribution des rôles IA" data-en="Assignment of AI-related roles">Attribution des rôles IA</span></div>
+        </div></td>
+        <td class="col-cis"><span class="empty-cell" data-fr="— Non couvert directement" data-en="— Not directly covered">— Non couvert directement</span></td>
+        <td class="col-itil"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-itil">Stratégie</span><span class="ref-text" data-fr="Strategy Management — alignement IT/métier" data-en="Strategy Management — IT/business alignment">Strategy Management — alignement IT/métier</span></div>
+          <div class="ref-item"><span class="ref-code code-itil" data-i18n="f_gov">Gouvernance</span><span class="ref-text" data-fr="SVS Governance — politiques et supervision" data-en="SVS Governance — policies and oversight">SVS Governance — politiques et supervision</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">Amélioration</span><span class="ref-text" data-fr="Continual Improvement — revue des politiques" data-en="Continual Improvement — policy review">Continual Improvement — revue des politiques</span></div>
+        </div></td>
+        <td class="col-cobit"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-cobit">EDM01</span><span class="ref-text" data-fr="Assurer la définition et le maintien du cadre de gouvernance" data-en="Ensure the governance framework setting and maintenance">Assurer la définition et le maintien du cadre de gouvernance</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">EDM02</span><span class="ref-text" data-fr="Assurer la réalisation des bénéfices" data-en="Ensure benefits delivery">Assurer la réalisation des bénéfices</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">APO01</span><span class="ref-text" data-fr="Gérer le cadre de management IT" data-en="Managed I&T Management Framework">Gérer le cadre de management IT</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">APO13</span><span class="ref-text" data-fr="Gérer la sécurité de l'information (politique SMSI)" data-en="Managed Security (information security policy, ISMS)">Gérer la sécurité de l'information (politique SMSI)</span></div>
+        </div></td>
+      </tr>
+      <tr data-domain="risk">
+        <td><div class="domain-cell"><span class="domain-num">02</span><span class="domain-name" data-i18n="d_02_name">Gestion des risques</span><span class="domain-tag tag-risk" data-i18n="f_risk">Risque</span></div></td>
+        <td class="col-nist"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-nist">GV.RM</span><span class="ref-text" data-fr="Stratégie et appétit au risque" data-en="Risk strategy and risk appetite">Stratégie et appétit au risque</span></div>
+          <div class="ref-item"><span class="ref-code code-nist">ID.RA</span><span class="ref-text" data-fr="Évaluation des risques" data-en="Risk assessment">Évaluation des risques</span></div>
+          <div class="ref-item"><span class="ref-code code-nist">ID.IM</span><span class="ref-text" data-fr="Amélioration continue (PDCA)" data-en="Continual improvement (Plan-Do-Check-Act)">Amélioration continue (PDCA)</span></div>
+        </div></td>
+        <td class="col-iso27"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso27">§6.1</span><span class="ref-text" data-fr="Appréciation des risques (ISO 27005)" data-en="Information security risk assessment (ISO 27005)">Appréciation des risques (ISO 27005)</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">§6.2</span><span class="ref-text" data-fr="Déclaration d'applicabilité (SoA)" data-en="Statement of Applicability (SoA)">Déclaration d'applicabilité (SoA)</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">§8.2</span><span class="ref-text" data-fr="Traitement des risques" data-en="Information security risk treatment">Traitement des risques</span></div>
+        </div></td>
+        <td class="col-iso42"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso42">§6.1</span><span class="ref-text" data-fr="Risques et opportunités liés à l'IA" data-en="AI-related risks and opportunities">Risques et opportunités liés à l'IA</span></div>
+          <div class="ref-item"><span class="ref-code code-iso42">A.4.2</span><span class="ref-text" data-fr="Évaluation d'impact IA (AIIA)" data-en="AI impact assessment (AIIA)">Évaluation d'impact IA (AIIA)</span></div>
+          <div class="ref-item"><span class="ref-code code-iso42">A.8.4</span><span class="ref-text" data-fr="Gestion des risques systèmes IA" data-en="AI system risk management">Gestion des risques systèmes IA</span></div>
+        </div></td>
+        <td class="col-cis"><span class="empty-cell" data-fr="— Non couvert directement" data-en="— Not directly covered">— Non couvert directement</span></td>
+        <td class="col-itil"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-itil">Risk Mgmt</span><span class="ref-text" data-fr="Risk Management practice — identification et traitement" data-en="Risk Management practice — identification and treatment">Risk Management practice — identification et traitement</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">Relation</span><span class="ref-text" data-fr="Relationship Management — appétit au risque partagé" data-en="Relationship Management — shared risk appetite">Relationship Management — appétit au risque partagé</span></div>
+        </div></td>
+        <td class="col-cobit"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-cobit">EDM03</span><span class="ref-text" data-fr="Assurer l'optimisation des risques" data-en="Ensure risk optimisation">Assurer l'optimisation des risques</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">APO12</span><span class="ref-text" data-fr="Gérer les risques IT (risk register, scénarios)" data-en="Managed Risk — risk register, scenarios">Gérer les risques IT (risk register, scénarios)</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">APO11</span><span class="ref-text" data-fr="Gérer la qualité — lié à l'amélioration continue" data-en="Managed Quality — linked to continual improvement">Gérer la qualité — lié à l'amélioration continue</span></div>
+        </div></td>
+      </tr>
+      <tr data-domain="ops">
+        <td><div class="domain-cell"><span class="domain-num">03</span><span class="domain-name" data-i18n="d_03_name">Gestion des actifs</span><span class="domain-tag tag-ops" data-i18n="f_ops">Opérations</span></div></td>
+        <td class="col-nist"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-nist">ID.AM-1</span><span class="ref-text" data-fr="Inventaire des actifs matériels" data-en="Inventory of hardware assets">Inventaire des actifs matériels</span></div>
+          <div class="ref-item"><span class="ref-code code-nist">ID.AM-2</span><span class="ref-text" data-fr="Inventaire logiciels / services" data-en="Inventory of software / services">Inventaire logiciels / services</span></div>
+          <div class="ref-item"><span class="ref-code code-nist">ID.AM-5</span><span class="ref-text" data-fr="Priorisation par criticité métier" data-en="Prioritization by business criticality">Priorisation par criticité métier</span></div>
+        </div></td>
+        <td class="col-iso27"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso27">A.5.9</span><span class="ref-text" data-fr="Inventaire des actifs d'information" data-en="Inventory of information and associated assets">Inventaire des actifs d'information</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.5.10</span><span class="ref-text" data-fr="Utilisation acceptable des actifs" data-en="Acceptable use of information and assets">Utilisation acceptable des actifs</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.5.11</span><span class="ref-text" data-fr="Restitution des actifs" data-en="Return of assets">Restitution des actifs</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.5.12</span><span class="ref-text" data-fr="Classification des informations" data-en="Classification of information">Classification des informations</span></div>
+        </div></td>
+        <td class="col-iso42"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso42">A.8.1</span><span class="ref-text" data-fr="Inventaire des systèmes IA" data-en="Inventory of AI systems">Inventaire des systèmes IA</span></div>
+          <div class="ref-item"><span class="ref-code code-iso42">A.8.3</span><span class="ref-text" data-fr="Gestion du cycle de vie IA" data-en="AI system lifecycle management">Gestion du cycle de vie IA</span></div>
+        </div></td>
+        <td class="col-cis"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-cis">CIS 1</span><span class="ref-text" data-fr="Inventaire et contrôle des actifs matériels" data-en="Inventory and control of enterprise assets">Inventaire et contrôle des actifs matériels</span></div>
+          <div class="ref-item"><span class="ref-code code-cis">CIS 2</span><span class="ref-text" data-fr="Inventaire et contrôle des logiciels" data-en="Inventory and control of software assets">Inventaire et contrôle des logiciels</span></div>
+        </div></td>
+        <td class="col-itil"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-itil">ITAM</span><span class="ref-text" data-fr="IT Asset Management — cycle de vie des actifs" data-en="IT Asset Management — asset lifecycle">IT Asset Management — cycle de vie des actifs</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">SACM</span><span class="ref-text" data-fr="Service Configuration Management — CMDB" data-en="Service Configuration Management — CMDB">Service Configuration Management — CMDB</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">Fin.</span><span class="ref-text" data-fr="Service Financial Management — valorisation des actifs" data-en="Service Financial Management — asset valuation">Service Financial Management — valorisation des actifs</span></div>
+        </div></td>
+        <td class="col-cobit"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-cobit">BAI09</span><span class="ref-text" data-fr="Gérer les actifs IT (inventaire, CMDB)" data-en="Managed Assets — inventory, CMDB">Gérer les actifs IT (inventaire, CMDB)</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">APO03</span><span class="ref-text" data-fr="Gérer l'architecture d'entreprise" data-en="Managed Enterprise Architecture">Gérer l'architecture d'entreprise</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">APO04</span><span class="ref-text" data-fr="Gérer l'innovation — classification des actifs numériques" data-en="Managed Innovation — digital asset classification">Gérer l'innovation — classification des actifs numériques</span></div>
+        </div></td>
+      </tr>
+
+      <!-- 04 CONTRÔLE DES ACCÈS & IAM -->
+      <tr data-domain="tech">
+        <td><div class="domain-cell"><span class="domain-num">04</span><span class="domain-name" data-i18n="d_04_name">Contrôle des accès &amp; Identités (IAM)</span><span class="domain-tag tag-tech" data-i18n="f_tech">Technique</span></div></td>
+        <td class="col-nist"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-nist">PR.AA-1</span><span class="ref-text" data-fr="Identités et credentials gérés" data-en="Identities and credentials managed">Identités et credentials gérés</span></div>
+          <div class="ref-item"><span class="ref-code code-nist">PR.AA-2</span><span class="ref-text" data-fr="Authentification forte (MFA)" data-en="Strong authentication (MFA)">Authentification forte (MFA)</span></div>
+          <div class="ref-item"><span class="ref-code code-nist">PR.AA-3</span><span class="ref-text" data-fr="Accès privilégiés (PAM)" data-en="Privileged access (PAM)">Accès privilégiés (PAM)</span></div>
+          <div class="ref-item"><span class="ref-code code-nist">PR.AA-5</span><span class="ref-text" data-fr="Revue périodique des droits" data-en="Periodic access rights review">Revue périodique des droits</span></div>
+        </div></td>
+        <td class="col-iso27"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso27">A.5.15</span><span class="ref-text" data-fr="Contrôle d'accès" data-en="Access control">Contrôle d'accès</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.5.16</span><span class="ref-text" data-fr="Gestion des identités" data-en="Identity management">Gestion des identités</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.5.17</span><span class="ref-text" data-fr="Informations d'authentification" data-en="Authentication information">Informations d'authentification</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.5.18</span><span class="ref-text" data-fr="Droits d'accès (provisioning)" data-en="Access rights (provisioning)">Droits d'accès (provisioning)</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.8.2</span><span class="ref-text" data-fr="Droits d'accès privilégiés" data-en="Privileged access rights">Droits d'accès privilégiés</span></div>
+        </div></td>
+        <td class="col-iso42"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso42">A.7.4</span><span class="ref-text" data-fr="Contrôle d'accès aux systèmes IA" data-en="Access control for AI systems">Contrôle d'accès aux systèmes IA</span></div>
+          <div class="ref-item"><span class="ref-code code-iso42">A.9.4</span><span class="ref-text" data-fr="Sécurité des données d'entraînement" data-en="Training data security">Sécurité des données d'entraînement</span></div>
+        </div></td>
+        <td class="col-cis"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-cis">CIS 5</span><span class="ref-text" data-fr="Gestion des comptes (Account Mgmt)" data-en="Account Management">Gestion des comptes (Account Mgmt)</span></div>
+          <div class="ref-item"><span class="ref-code code-cis">CIS 6</span><span class="ref-text" data-fr="Gestion du contrôle d'accès" data-en="Access Control Management">Gestion du contrôle d'accès</span></div>
+        </div></td>
+        <td class="col-itil"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-itil">SecInfo</span><span class="ref-text" data-fr="Information Security Mgmt — contrôle d'accès logique" data-en="Information Security Mgmt — logical access control">Information Security Mgmt — contrôle d'accès logique</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">SRM</span><span class="ref-text" data-fr="Service Request Management — provisioning des accès" data-en="Service Request Management — access provisioning">Service Request Management — provisioning des accès</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">SACM</span><span class="ref-text" data-fr="Service Configuration Management — gestion des comptes" data-en="Service Configuration Management — account management">Service Configuration Management — gestion des comptes</span></div>
+        </div></td>
+        <td class="col-cobit"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-cobit">DSS05</span><span class="ref-text" data-fr="Gérer les services de sécurité (IAM, MFA, PAM)" data-en="Managed Security Services (IAM, MFA, PAM)">Gérer les services de sécurité (IAM, MFA, PAM)</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">APO13</span><span class="ref-text" data-fr="Gérer la sécurité — politique de contrôle d'accès" data-en="Managed Security — access control policy">Gérer la sécurité — politique de contrôle d'accès</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">BAI10</span><span class="ref-text" data-fr="Gérer la configuration — gestion des droits" data-en="Managed Configuration — access rights management">Gérer la configuration — gestion des droits</span></div>
+        </div></td>
+      </tr>
+
+      <!-- 05 SENSIBILISATION & FORMATION -->
+      <tr data-domain="gov">
+        <td><div class="domain-cell"><span class="domain-num">05</span><span class="domain-name" data-i18n="d_05_name">Sensibilisation &amp; Formation</span><span class="domain-tag tag-gov" data-i18n="f_gov">Gouvernance</span></div></td>
+        <td class="col-nist"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-nist">PR.AT-1</span><span class="ref-text" data-fr="Sensibilisation tous utilisateurs" data-en="Awareness for all users">Sensibilisation tous utilisateurs</span></div>
+          <div class="ref-item"><span class="ref-code code-nist">PR.AT-2</span><span class="ref-text" data-fr="Formation rôles à responsabilités cyber" data-en="Training for roles with cybersecurity responsibilities">Formation rôles à responsabilités cyber</span></div>
+        </div></td>
+        <td class="col-iso27"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso27">A.6.3</span><span class="ref-text" data-fr="Sensibilisation, éducation et formation" data-en="Information security awareness, education and training">Sensibilisation, éducation et formation</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">§7.2</span><span class="ref-text" data-fr="Compétences requises (SMSI)" data-en="Competence requirements (ISMS)">Compétences requises (SMSI)</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">§7.3</span><span class="ref-text" data-fr="Sensibilisation aux politiques" data-en="Awareness of security policies">Sensibilisation aux politiques</span></div>
+        </div></td>
+        <td class="col-iso42"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso42">§7.2</span><span class="ref-text" data-fr="Compétences IA requises" data-en="AI-related competence requirements">Compétences IA requises</span></div>
+          <div class="ref-item"><span class="ref-code code-iso42">A.6.2</span><span class="ref-text" data-fr="Formation éthique et responsable IA" data-en="Ethical and responsible AI training">Formation éthique et responsable IA</span></div>
+          <div class="ref-item"><span class="ref-code code-iso42">A.6.4</span><span class="ref-text" data-fr="Sensibilisation aux biais algorithmiques" data-en="Awareness of algorithmic bias">Sensibilisation aux biais algorithmiques</span></div>
+        </div></td>
+        <td class="col-cis"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-cis">CIS 14</span><span class="ref-text" data-fr="Sensibilisation &amp; formation à la sécurité" data-en="Security Awareness and Skills Training">Sensibilisation &amp; formation à la sécurité</span></div>
+        </div></td>
+        <td class="col-itil"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-itil">WTM</span><span class="ref-text" data-fr="Workforce &amp; Talent Management — compétences IT" data-en="Workforce &amp; Talent Management — IT competencies">Workforce &amp; Talent Management — compétences IT</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">OCM</span><span class="ref-text" data-fr="Organizational Change Management — culture sécurité" data-en="Organizational Change Management — security culture">Organizational Change Management — culture sécurité</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">KM</span><span class="ref-text" data-fr="Knowledge Management — base de connaissances sécurité" data-en="Knowledge Management — security knowledge base">Knowledge Management — base de connaissances sécurité</span></div>
+        </div></td>
+        <td class="col-cobit"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-cobit">APO07</span><span class="ref-text" data-fr="Gérer les ressources humaines IT — formation et compétences" data-en="Managed Human Resources — training and competencies">Gérer les ressources humaines IT — formation et compétences</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">DSS05</span><span class="ref-text" data-fr="Gérer les services de sécurité — sensibilisation cyber" data-en="Managed Security Services — cybersecurity awareness">Gérer les services de sécurité — sensibilisation cyber</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">APO01</span><span class="ref-text" data-fr="Gérer le cadre IT — culture et comportements attendus" data-en="Managed I&T Management Framework — culture and expected behaviours">Gérer le cadre IT — culture et comportements attendus</span></div>
+        </div></td>
+      </tr>
+
+      <!-- 06 SÉCURITÉ PHYSIQUE -->
+      <tr data-domain="ops">
+        <td><div class="domain-cell"><span class="domain-num">06</span><span class="domain-name" data-i18n="d_06_name">Sécurité physique &amp; environnementale</span><span class="domain-tag tag-ops" data-i18n="f_ops">Opérations</span></div></td>
+        <td class="col-nist"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-nist">PR.AA-4</span><span class="ref-text" data-fr="Authentification physique (badges)" data-en="Physical authentication (badges, access cards)">Authentification physique (badges)</span></div>
+          <div class="ref-item"><span class="ref-code code-nist">PR.PS-3</span><span class="ref-text" data-fr="Protection physique du matériel" data-en="Physical protection of hardware">Protection physique du matériel</span></div>
+        </div></td>
+        <td class="col-iso27"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso27">A.7.1</span><span class="ref-text" data-fr="Périmètres de sécurité physique" data-en="Physical security perimeters">Périmètres de sécurité physique</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.7.2</span><span class="ref-text" data-fr="Contrôle d'accès physique" data-en="Physical access control">Contrôle d'accès physique</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.7.8</span><span class="ref-text" data-fr="Équipements sans surveillance" data-en="Unattended user equipment">Équipements sans surveillance</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.7.11</span><span class="ref-text" data-fr="Services support (énergie, climatisation)" data-en="Supporting utilities (power, air conditioning)">Services support (énergie, climatisation)</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.7.14</span><span class="ref-text" data-fr="Mise au rebut sécurisée" data-en="Secure disposal or reuse of equipment">Mise au rebut sécurisée</span></div>
+        </div></td>
+        <td class="col-iso42"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso42">A.7.5</span><span class="ref-text" data-fr="Sécurité physique des infras IA" data-en="Physical security of AI infrastructure">Sécurité physique des infras IA</span></div>
+        </div></td>
+        <td class="col-cis"><span class="empty-cell" data-fr="— Non couvert directement" data-en="— Not directly covered">— Non couvert directement</span></td>
+        <td class="col-itil"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-itil">Infra</span><span class="ref-text" data-fr="Infrastructure &amp; Platform Management — sécurité datacentre" data-en="Infrastructure &amp; Platform Management — data centre security">Infrastructure &amp; Platform Management — sécurité datacentre</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">ITAM</span><span class="ref-text" data-fr="IT Asset Management — gestion du matériel physique" data-en="IT Asset Management — physical hardware management">IT Asset Management — gestion du matériel physique</span></div>
+        </div></td>
+        <td class="col-cobit"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-cobit">DSS05</span><span class="ref-text" data-fr="Gérer les services de sécurité — protection physique des systèmes" data-en="Managed Security Services — physical system protection">Gérer les services de sécurité — protection physique des systèmes</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">BAI09</span><span class="ref-text" data-fr="Gérer les actifs IT — matériels et équipements physiques" data-en="Managed Assets — physical hardware and equipment">Gérer les actifs IT — matériels et équipements physiques</span></div>
+        </div></td>
+      </tr>
+      <tr data-domain="tech">
+        <td><div class="domain-cell"><span class="domain-num">07</span><span class="domain-name" data-i18n="d_07_name">Sécurisation des configurations (Hardening)</span><span class="domain-tag tag-tech" data-i18n="f_tech">Technique</span></div></td>
+        <td class="col-nist"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-nist">PR.PS-1</span><span class="ref-text" data-fr="Baseline de configuration sécurisée" data-en="Secure configuration baselines">Baseline de configuration sécurisée</span></div>
+          <div class="ref-item"><span class="ref-code code-nist">PR.PS-2</span><span class="ref-text" data-fr="Gestion des correctifs (patch mgmt)" data-en="Patch management">Gestion des correctifs (patch mgmt)</span></div>
+          <div class="ref-item"><span class="ref-code code-nist">PR.PS-4</span><span class="ref-text" data-fr="Journalisation activée et protégée" data-en="Logging enabled and protected">Journalisation activée et protégée</span></div>
+        </div></td>
+        <td class="col-iso27"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso27">A.8.7</span><span class="ref-text" data-fr="Protection contre les malwares" data-en="Protection against malware">Protection contre les malwares</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.8.8</span><span class="ref-text" data-fr="Gestion des vulnérabilités techniques" data-en="Management of technical vulnerabilities">Gestion des vulnérabilités techniques</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.8.9</span><span class="ref-text" data-fr="Gestion de la configuration" data-en="Configuration management">Gestion de la configuration</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.8.18</span><span class="ref-text" data-fr="Utilisation des logiciels privilégiés" data-en="Use of privileged utility programs">Utilisation des logiciels privilégiés</span></div>
+        </div></td>
+        <td class="col-iso42"><span class="empty-cell" data-fr="— Non couvert directement" data-en="— Not directly covered">— Non couvert directement</span></td>
+        <td class="col-cis"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-cis">CIS 4</span><span class="ref-text" data-fr="Configuration sécurisée des actifs" data-en="Secure Configuration of Enterprise Assets and Software">Configuration sécurisée des actifs</span></div>
+          <div class="ref-item"><span class="ref-code code-cis">CIS 7</span><span class="ref-text" data-fr="Gestion continue des vulnérabilités" data-en="Continuous Vulnerability Management">Gestion continue des vulnérabilités</span></div>
+          <div class="ref-item"><span class="ref-code code-cis">CIS 10</span><span class="ref-text" data-fr="Défenses anti-malwares" data-en="Malware Defenses">Défenses anti-malwares</span></div>
+        </div></td>
+        <td class="col-itil"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-itil">Change</span><span class="ref-text" data-fr="Change Enablement — contrôle des changements de config" data-en="Change Enablement — configuration change control">Change Enablement — contrôle des changements de config</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">SACM</span><span class="ref-text" data-fr="Service Configuration Management — gestion des baselines" data-en="Service Configuration Management — baseline management">Service Configuration Management — gestion des baselines</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">Release</span><span class="ref-text" data-fr="Release Management — déploiement des correctifs" data-en="Release Management — patch deployment">Release Management — déploiement des correctifs</span></div>
+        </div></td>
+        <td class="col-cobit"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-cobit">BAI10</span><span class="ref-text" data-fr="Gérer la configuration — baselines et CMDB" data-en="Managed Configuration — baselines and CMDB">Gérer la configuration — baselines et CMDB</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">BAI06</span><span class="ref-text" data-fr="Gérer les changements IT — processus de change management" data-en="Managed IT Changes — change management process">Gérer les changements IT — processus de change management</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">DSS05</span><span class="ref-text" data-fr="Gérer les services de sécurité — hardening et patch" data-en="Managed Security Services — hardening and patch management">Gérer les services de sécurité — hardening et patch</span></div>
+        </div></td>
+      </tr>
+
+      <!-- 08 PROTECTION DES DONNÉES -->
+      <tr data-domain="tech">
+        <td><div class="domain-cell"><span class="domain-num">08</span><span class="domain-name" data-i18n="d_08_name">Protection des données &amp; Chiffrement</span><span class="domain-tag tag-tech" data-i18n="f_tech">Technique</span></div></td>
+        <td class="col-nist"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-nist">PR.DS-1</span><span class="ref-text" data-fr="Protection des données au repos" data-en="Data-at-rest protection">Protection des données au repos</span></div>
+          <div class="ref-item"><span class="ref-code code-nist">PR.DS-2</span><span class="ref-text" data-fr="Protection des données en transit" data-en="Data-in-transit protection">Protection des données en transit</span></div>
+          <div class="ref-item"><span class="ref-code code-nist">PR.DS-5</span><span class="ref-text" data-fr="Protection contre les fuites (DLP)" data-en="Protection against data leakage (DLP)">Protection contre les fuites (DLP)</span></div>
+        </div></td>
+        <td class="col-iso27"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso27">A.5.33</span><span class="ref-text" data-fr="Protection des enregistrements" data-en="Protection of records">Protection des enregistrements</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.8.24</span><span class="ref-text" data-fr="Utilisation de la cryptographie" data-en="Use of cryptography">Utilisation de la cryptographie</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.8.25</span><span class="ref-text" data-fr="Cycle de vie du développement sécurisé" data-en="Secure development life cycle">Cycle de vie du développement sécurisé</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.5.34</span><span class="ref-text" data-fr="Vie privée et protection données perso (RGPD)" data-en="Privacy and protection of personal information (GDPR)">Vie privée et protection données perso (RGPD)</span></div>
+        </div></td>
+        <td class="col-iso42"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso42">A.9.1</span><span class="ref-text" data-fr="Classification données d'entraînement IA" data-en="Classification of AI training data">Classification données d'entraînement IA</span></div>
+          <div class="ref-item"><span class="ref-code code-iso42">A.9.2</span><span class="ref-text" data-fr="Qualité &amp; intégrité des jeux de données" data-en="Quality &amp; integrity of datasets">Qualité &amp; intégrité des jeux de données</span></div>
+          <div class="ref-item"><span class="ref-code code-iso42">A.9.5</span><span class="ref-text" data-fr="Protection données personnelles dans IA" data-en="Protection of personal data in AI systems">Protection données personnelles dans IA</span></div>
+        </div></td>
+        <td class="col-cis"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-cis">CIS 3</span><span class="ref-text" data-fr="Protection des données (DLP, chiffrement)" data-en="Data Protection (DLP, encryption)">Protection des données (DLP, chiffrement)</span></div>
+          <div class="ref-item"><span class="ref-code code-cis">CIS 11</span><span class="ref-text" data-fr="Récupération des données (sauvegardes)" data-en="Data Recovery (backups)">Récupération des données (sauvegardes)</span></div>
+        </div></td>
+        <td class="col-itil"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-itil">SecInfo</span><span class="ref-text" data-fr="Information Security Management — classification et chiffrement" data-en="Information Security Management — classification and encryption">Information Security Management — classification et chiffrement</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">SACM</span><span class="ref-text" data-fr="Service Configuration Management — inventaire des données sensibles" data-en="Service Configuration Management — sensitive data inventory">Service Configuration Management — inventaire des données sensibles</span></div>
+        </div></td>
+        <td class="col-cobit"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-cobit">APO14</span><span class="ref-text" data-fr="Gérer les données — qualité, classification, rétention" data-en="Managed Data — quality, classification, retention">Gérer les données — qualité, classification, rétention</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">DSS05</span><span class="ref-text" data-fr="Gérer les services de sécurité — chiffrement et DLP" data-en="Managed Security Services — encryption and DLP">Gérer les services de sécurité — chiffrement et DLP</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">MEA03</span><span class="ref-text" data-fr="Gérer la conformité — protection données RGPD" data-en="Managed Compliance — GDPR data protection">Gérer la conformité — protection données RGPD</span></div>
+        </div></td>
+      </tr>
+
+      <!-- 09 SÉCURITÉ RÉSEAU -->
+      <tr data-domain="tech">
+        <td><div class="domain-cell"><span class="domain-num">09</span><span class="domain-name" data-i18n="d_09_name">Sécurité réseau &amp; Infrastructure</span><span class="domain-tag tag-tech" data-i18n="f_tech">Technique</span></div></td>
+        <td class="col-nist"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-nist">PR.PS-5</span><span class="ref-text" data-fr="Segmentation et protection réseau" data-en="Network segmentation and protection">Segmentation et protection réseau</span></div>
+          <div class="ref-item"><span class="ref-code code-nist">PR.IR-1</span><span class="ref-text" data-fr="Résilience réseau" data-en="Network resilience">Résilience réseau</span></div>
+          <div class="ref-item"><span class="ref-code code-nist">DE.CM-1</span><span class="ref-text" data-fr="Surveillance réseau (NDR)" data-en="Network monitoring (NDR)">Surveillance réseau (NDR)</span></div>
+        </div></td>
+        <td class="col-iso27"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso27">A.8.20</span><span class="ref-text" data-fr="Sécurité des réseaux" data-en="Network security">Sécurité des réseaux</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.8.21</span><span class="ref-text" data-fr="Sécurité des services réseau" data-en="Security of network services">Sécurité des services réseau</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.8.22</span><span class="ref-text" data-fr="Ségrégation des réseaux" data-en="Segregation of networks">Ségrégation des réseaux</span></div>
+        </div></td>
+        <td class="col-iso42"><span class="empty-cell" data-fr="— Non couvert directement" data-en="— Not directly covered">— Non couvert directement</span></td>
+        <td class="col-cis"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-cis">CIS 12</span><span class="ref-text" data-fr="Gestion de l'infrastructure réseau" data-en="Network Infrastructure Management">Gestion de l'infrastructure réseau</span></div>
+          <div class="ref-item"><span class="ref-code code-cis">CIS 13</span><span class="ref-text" data-fr="Surveillance et défense réseau" data-en="Network Monitoring and Defense">Surveillance et défense réseau</span></div>
+          <div class="ref-item"><span class="ref-code code-cis">CIS 9</span><span class="ref-text" data-fr="Protection email &amp; navigateurs web" data-en="Email and Web Browser Protections">Protection email &amp; navigateurs web</span></div>
+        </div></td>
+        <td class="col-itil"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-itil">Infra</span><span class="ref-text" data-fr="Infrastructure &amp; Platform Management — réseau et segmentation" data-en="Infrastructure &amp; Platform Management — network and segmentation">Infrastructure &amp; Platform Management — réseau et segmentation</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">Avail.</span><span class="ref-text" data-fr="Availability Management — disponibilité des services réseau" data-en="Availability Management — network service availability">Availability Management — disponibilité des services réseau</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">Capa.</span><span class="ref-text" data-fr="Capacity &amp; Performance Mgmt — bande passante et saturation" data-en="Capacity &amp; Performance Management — bandwidth and saturation">Capacity &amp; Performance Mgmt — bande passante et saturation</span></div>
+        </div></td>
+        <td class="col-cobit"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-cobit">DSS05</span><span class="ref-text" data-fr="Gérer les services de sécurité — sécurité réseau et firewall" data-en="Managed Security Services — network security and firewall">Gérer les services de sécurité — sécurité réseau et firewall</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">BAI04</span><span class="ref-text" data-fr="Gérer la disponibilité et la capacité réseau" data-en="Managed Availability and Capacity — network">Gérer la disponibilité et la capacité réseau</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">APO03</span><span class="ref-text" data-fr="Gérer l'architecture — segmentation et Zero Trust" data-en="Managed Enterprise Architecture — segmentation and Zero Trust">Gérer l'architecture — segmentation et Zero Trust</span></div>
+        </div></td>
+      </tr>
+
+      <!-- 10 SÉCURITÉ APPLICATIVE -->
+      <tr data-domain="tech">
+        <td><div class="domain-cell"><span class="domain-num">10</span><span class="domain-name" data-i18n="d_10_name">Sécurité applicative &amp; DevSecOps</span><span class="domain-tag tag-tech" data-i18n="f_tech">Technique</span></div></td>
+        <td class="col-nist"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-nist">PR.PS-6</span><span class="ref-text" data-fr="Pratiques de développement sécurisé" data-en="Secure software development practices">Pratiques de développement sécurisé</span></div>
+          <div class="ref-item"><span class="ref-code code-nist">ID.RA-7</span><span class="ref-text" data-fr="Vulnérabilités dans les composants tiers" data-en="Vulnerabilities in third-party components">Vulnérabilités dans les composants tiers</span></div>
+        </div></td>
+        <td class="col-iso27"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso27">A.8.25</span><span class="ref-text" data-fr="Cycle de vie du développement sécurisé" data-en="Secure development life cycle">Cycle de vie du développement sécurisé</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.8.26</span><span class="ref-text" data-fr="Exigences de sécurité applicative" data-en="Application security requirements">Exigences de sécurité applicative</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.8.27</span><span class="ref-text" data-fr="Architecture sécurisée (Secure by Design)" data-en="Secure system architecture (Secure by Design)">Architecture sécurisée (Secure by Design)</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.8.28</span><span class="ref-text" data-fr="Codage sécurisé" data-en="Secure coding">Codage sécurisé</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.8.29</span><span class="ref-text" data-fr="Tests de sécurité (SAST/DAST)" data-en="Security testing (SAST/DAST)">Tests de sécurité (SAST/DAST)</span></div>
+        </div></td>
+        <td class="col-iso42"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso42">A.10.1</span><span class="ref-text" data-fr="Tests et validation des systèmes IA" data-en="AI system testing and validation">Tests et validation des systèmes IA</span></div>
+          <div class="ref-item"><span class="ref-code code-iso42">A.10.2</span><span class="ref-text" data-fr="Performance &amp; sécurité du modèle" data-en="Model performance &amp; security">Performance &amp; sécurité du modèle</span></div>
+        </div></td>
+        <td class="col-cis"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-cis">CIS 16</span><span class="ref-text" data-fr="Sécurité des logiciels applicatifs" data-en="Application Software Security">Sécurité des logiciels applicatifs</span></div>
+          <div class="ref-item"><span class="ref-code code-cis">CIS 18</span><span class="ref-text" data-fr="Tests d'intrusion (Pentest)" data-en="Penetration Testing">Tests d'intrusion (Pentest)</span></div>
+        </div></td>
+        <td class="col-itil"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-itil">SDM</span><span class="ref-text" data-fr="Software Dev &amp; Management — développement sécurisé (SDL)" data-en="Software Development &amp; Management — secure development lifecycle (SDL)">Software Dev &amp; Management — développement sécurisé (SDL)</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">Change</span><span class="ref-text" data-fr="Change Enablement — révision des changements applicatifs" data-en="Change Enablement — application change review">Change Enablement — révision des changements applicatifs</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">SVT</span><span class="ref-text" data-fr="Service Validation &amp; Testing — tests de sécurité (SAST/DAST)" data-en="Service Validation &amp; Testing — security tests (SAST/DAST)">Service Validation &amp; Testing — tests de sécurité (SAST/DAST)</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">Deploy</span><span class="ref-text" data-fr="Deployment Management — livraisons contrôlées en production" data-en="Deployment Management — controlled production releases">Deployment Management — livraisons contrôlées en production</span></div>
+        </div></td>
+        <td class="col-cobit"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-cobit">BAI03</span><span class="ref-text" data-fr="Gérer l'identification et la construction des solutions" data-en="Managed Solutions Identification and Build">Gérer l'identification et la construction des solutions</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">BAI07</span><span class="ref-text" data-fr="Gérer l'acceptation du changement et la transition" data-en="Managed IT Change Acceptance and Transitioning">Gérer l'acceptation du changement et la transition</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">APO13</span><span class="ref-text" data-fr="Gérer la sécurité — exigences sécurité dans les projets" data-en="Managed Security — security requirements in projects">Gérer la sécurité — exigences sécurité dans les projets</span></div>
+        </div></td>
+      </tr>
+
+      <!-- 11 SURVEILLANCE & DÉTECTION -->
+      <tr data-domain="cyber">
+        <td><div class="domain-cell"><span class="domain-num">11</span><span class="domain-name" data-i18n="d_11_name">Surveillance &amp; Détection</span><span class="domain-tag tag-cyber" data-i18n="f_cyber">Cyber Ops</span></div></td>
+        <td class="col-nist"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-nist">DE.CM</span><span class="ref-text" data-fr="Surveillance continue (SIEM, EDR, NDR)" data-en="Continuous monitoring (SIEM, EDR, NDR)">Surveillance continue (SIEM, EDR, NDR)</span></div>
+          <div class="ref-item"><span class="ref-code code-nist">DE.AE</span><span class="ref-text" data-fr="Analyse des événements adverses (UEBA)" data-en="Adverse event analysis (UEBA)">Analyse des événements adverses (UEBA)</span></div>
+          <div class="ref-item"><span class="ref-code code-nist">ID.RA-2</span><span class="ref-text" data-fr="Veille cyber &amp; threat intelligence" data-en="Cyber watch &amp; threat intelligence">Veille cyber &amp; threat intelligence</span></div>
+        </div></td>
+        <td class="col-iso27"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso27">A.8.15</span><span class="ref-text" data-fr="Journalisation (logging)" data-en="Logging">Journalisation (logging)</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.8.16</span><span class="ref-text" data-fr="Surveillance des activités" data-en="Monitoring activities">Surveillance des activités</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.5.7</span><span class="ref-text" data-fr="Renseignements sur les menaces (CTI)" data-en="Threat intelligence (CTI)">Renseignements sur les menaces (CTI)</span></div>
+        </div></td>
+        <td class="col-iso42"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso42">A.10.3</span><span class="ref-text" data-fr="Surveillance du comportement des modèles IA" data-en="AI model behaviour monitoring">Surveillance du comportement des modèles IA</span></div>
+          <div class="ref-item"><span class="ref-code code-iso42">A.7.6</span><span class="ref-text" data-fr="Journalisation des décisions IA" data-en="Logging of AI decisions">Journalisation des décisions IA</span></div>
+        </div></td>
+        <td class="col-cis"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-cis">CIS 8</span><span class="ref-text" data-fr="Gestion des journaux d'audit (Log Mgmt)" data-en="Audit Log Management">Gestion des journaux d'audit (Log Mgmt)</span></div>
+          <div class="ref-item"><span class="ref-code code-cis">CIS 13</span><span class="ref-text" data-fr="Surveillance et défense réseau" data-en="Network Monitoring and Defense">Surveillance et défense réseau</span></div>
+        </div></td>
+        <td class="col-itil"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-itil">MEM</span><span class="ref-text" data-fr="Monitoring &amp; Event Management — détection des événements" data-en="Monitoring &amp; Event Management — event detection">Monitoring &amp; Event Management — détection des événements</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">M&amp;R</span><span class="ref-text" data-fr="Measurement &amp; Reporting — tableaux de bord KPI/KRI sécurité" data-en="Measurement &amp; Reporting — security KPI/KRI dashboards">Measurement &amp; Reporting — tableaux de bord KPI/KRI sécurité</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">SecInfo</span><span class="ref-text" data-fr="Information Security Management — veille et threat intel" data-en="Information Security Management — watch and threat intelligence">Information Security Management — veille et threat intel</span></div>
+        </div></td>
+        <td class="col-cobit"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-cobit">MEA01</span><span class="ref-text" data-fr="Gérer la surveillance et l'évaluation de la performance" data-en="Managed Performance and Conformance Monitoring">Gérer la surveillance et l'évaluation de la performance</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">DSS04</span><span class="ref-text" data-fr="Gérer la continuité — surveillance des événements critiques" data-en="Managed Continuity — critical event monitoring">Gérer la continuité — surveillance des événements critiques</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">DSS05</span><span class="ref-text" data-fr="Gérer les services de sécurité — SOC, SIEM, journaux" data-en="Managed Security Services — SOC, SIEM, logging">Gérer les services de sécurité — SOC, SIEM, journaux</span></div>
+        </div></td>
+      </tr>
+
+      <!-- 12 GESTION DES INCIDENTS -->
+      <tr data-domain="cyber">
+        <td><div class="domain-cell"><span class="domain-num">12</span><span class="domain-name" data-i18n="d_12_name">Réponse aux incidents</span><span class="domain-tag tag-cyber" data-i18n="f_cyber">Cyber Ops</span></div></td>
+        <td class="col-nist"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-nist">RS.MA</span><span class="ref-text" data-fr="Gestion &amp; coordination des incidents" data-en="Incident management &amp; coordination">Gestion &amp; coordination des incidents</span></div>
+          <div class="ref-item"><span class="ref-code code-nist">RS.AN</span><span class="ref-text" data-fr="Analyse forensique (DFIR)" data-en="Forensic analysis (DFIR)">Analyse forensique (DFIR)</span></div>
+          <div class="ref-item"><span class="ref-code code-nist">RS.CO</span><span class="ref-text" data-fr="Communication &amp; notification réglementaire" data-en="Communication &amp; regulatory notification">Communication &amp; notification réglementaire</span></div>
+          <div class="ref-item"><span class="ref-code code-nist">RS.MI</span><span class="ref-text" data-fr="Mitigation et containment" data-en="Mitigation and containment">Mitigation et containment</span></div>
+        </div></td>
+        <td class="col-iso27"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso27">A.5.24</span><span class="ref-text" data-fr="Planification de la réponse aux incidents" data-en="Planning of information security incident response">Planification de la réponse aux incidents</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.5.25</span><span class="ref-text" data-fr="Évaluation &amp; décision sur les événements" data-en="Assessment of and decision on information security events">Évaluation &amp; décision sur les événements</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.5.26</span><span class="ref-text" data-fr="Réponse aux incidents" data-en="Response to information security incidents">Réponse aux incidents</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.5.27</span><span class="ref-text" data-fr="Apprentissage des incidents (RETEX)" data-en="Learning from information security incidents">Apprentissage des incidents (RETEX)</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.5.28</span><span class="ref-text" data-fr="Collecte des preuves (forensique)" data-en="Collection of evidence">Collecte des preuves (forensique)</span></div>
+        </div></td>
+        <td class="col-iso42"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso42">A.10.4</span><span class="ref-text" data-fr="Procédure d'incident sur système IA" data-en="AI system incident procedure">Procédure d'incident sur système IA</span></div>
+          <div class="ref-item"><span class="ref-code code-iso42">A.5.3</span><span class="ref-text" data-fr="Reporting incidents liés à l'IA" data-en="AI-related incident reporting">Reporting incidents liés à l'IA</span></div>
+        </div></td>
+        <td class="col-cis"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-cis">CIS 17</span><span class="ref-text" data-fr="Gestion de la réponse aux incidents" data-en="Incident Response Management">Gestion de la réponse aux incidents</span></div>
+        </div></td>
+        <td class="col-itil"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-itil">IM</span><span class="ref-text" data-fr="Incident Management — processus de gestion des incidents IT" data-en="Incident Management — IT incident management process">Incident Management — processus de gestion des incidents IT</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">PM</span><span class="ref-text" data-fr="Problem Management — analyse causes racines (RCA)" data-en="Problem Management — root cause analysis (RCA)">Problem Management — analyse causes racines (RCA)</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">Service Desk</span><span class="ref-text" data-fr="Service Desk — point de contact et escalade" data-en="Service Desk — single point of contact and escalation">Service Desk — point de contact et escalade</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">MEM</span><span class="ref-text" data-fr="Monitoring &amp; Event Management — corrélation d'alertes" data-en="Monitoring &amp; Event Management — alert correlation">Monitoring &amp; Event Management — corrélation d'alertes</span></div>
+        </div></td>
+        <td class="col-cobit"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-cobit">DSS02</span><span class="ref-text" data-fr="Gérer les demandes de service et les incidents" data-en="Managed Service Requests and Incidents">Gérer les demandes de service et les incidents</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">DSS03</span><span class="ref-text" data-fr="Gérer les problèmes IT (analyse cause racine)" data-en="Managed Problems — root cause analysis">Gérer les problèmes IT (analyse cause racine)</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">MEA02</span><span class="ref-text" data-fr="Gérer le système de contrôle interne — audit des incidents" data-en="Managed System of Internal Control — incident audit">Gérer le système de contrôle interne — audit des incidents</span></div>
+        </div></td>
+      </tr>
+
+      <!-- 13 CONTINUITÉ & RÉSILIENCE -->
+      <tr data-domain="risk">
+        <td><div class="domain-cell"><span class="domain-num">13</span><span class="domain-name" data-i18n="d_13_name">Continuité &amp; Résilience (BCP/DR)</span><span class="domain-tag tag-risk" data-i18n="f_risk">Risque</span></div></td>
+        <td class="col-nist"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-nist">PR.IR</span><span class="ref-text" data-fr="Résilience de l'infrastructure (HA/DR)" data-en="Infrastructure resilience (HA/DR)">Résilience de l'infrastructure (HA/DR)</span></div>
+          <div class="ref-item"><span class="ref-code code-nist">RC.RP</span><span class="ref-text" data-fr="Exécution du plan de reprise (PRA)" data-en="Execution of the recovery plan (DRP)">Exécution du plan de reprise (PRA)</span></div>
+          <div class="ref-item"><span class="ref-code code-nist">RC.CO</span><span class="ref-text" data-fr="Communication post-reprise" data-en="Post-recovery communications">Communication post-reprise</span></div>
+        </div></td>
+        <td class="col-iso27"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso27">A.5.29</span><span class="ref-text" data-fr="Sécurité de l'information en continuité" data-en="Information security continuity">Sécurité de l'information en continuité</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.5.30</span><span class="ref-text" data-fr="Préparation ICT pour continuité (DORA)" data-en="ICT readiness for business continuity (DORA)">Préparation ICT pour continuité (DORA)</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.8.13</span><span class="ref-text" data-fr="Sauvegarde des informations" data-en="Information backup">Sauvegarde des informations</span></div>
+        </div></td>
+        <td class="col-iso42"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso42">A.8.5</span><span class="ref-text" data-fr="Plan de continuité des systèmes IA critiques" data-en="Business continuity plan for critical AI systems">Plan de continuité des systèmes IA critiques</span></div>
+        </div></td>
+        <td class="col-cis"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-cis">CIS 11</span><span class="ref-text" data-fr="Récupération de données (DR / Backups)" data-en="Data Recovery (DR / Backups)">Récupération de données (DR / Backups)</span></div>
+        </div></td>
+        <td class="col-itil"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-itil">ITSCM</span><span class="ref-text" data-fr="Service Continuity Management — PRA/PCA IT" data-en="IT Service Continuity Management — DRP/BCP">Service Continuity Management — PRA/PCA IT</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">Avail.</span><span class="ref-text" data-fr="Availability Management — RTO/RPO et haute disponibilité" data-en="Availability Management — RTO/RPO and high availability">Availability Management — RTO/RPO et haute disponibilité</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">Capa.</span><span class="ref-text" data-fr="Capacity &amp; Performance Mgmt — dimensionnement en situation de crise" data-en="Capacity &amp; Performance Management — sizing for crisis situations">Capacity &amp; Performance Mgmt — dimensionnement en situation de crise</span></div>
+        </div></td>
+        <td class="col-cobit"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-cobit">DSS04</span><span class="ref-text" data-fr="Gérer la continuité des services IT (BCP/DRP)" data-en="Managed Continuity — BCP/DRP">Gérer la continuité des services IT (BCP/DRP)</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">BAI04</span><span class="ref-text" data-fr="Gérer la disponibilité et la capacité — RTO/RPO" data-en="Managed Availability and Capacity — RTO/RPO">Gérer la disponibilité et la capacité — RTO/RPO</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">EDM03</span><span class="ref-text" data-fr="Assurer l'optimisation des risques — résilience opérationnelle" data-en="Ensure risk optimisation — operational resilience">Assurer l'optimisation des risques — résilience opérationnelle</span></div>
+        </div></td>
+      </tr>
+
+      <!-- 14 GESTION DES FOURNISSEURS -->
+      <tr data-domain="risk">
+        <td><div class="domain-cell"><span class="domain-num">14</span><span class="domain-name" data-i18n="d_14_name">Gestion des fournisseurs &amp; TPRM</span><span class="domain-tag tag-risk" data-i18n="f_risk">Risque</span></div></td>
+        <td class="col-nist"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-nist">GV.SC</span><span class="ref-text" data-fr="Risques chaîne d'approvisionnement" data-en="Cybersecurity supply chain risk management">Risques chaîne d'approvisionnement</span></div>
+          <div class="ref-item"><span class="ref-code code-nist">ID.RA-9</span><span class="ref-text" data-fr="Évaluation des risques tiers (TPRM)" data-en="Third-party risk assessment (TPRM)">Évaluation des risques tiers (TPRM)</span></div>
+        </div></td>
+        <td class="col-iso27"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso27">A.5.19</span><span class="ref-text" data-fr="Sécurité dans les relations fournisseurs" data-en="Information security in supplier relationships">Sécurité dans les relations fournisseurs</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.5.20</span><span class="ref-text" data-fr="Sécurité dans les accords fournisseurs" data-en="Addressing information security within supplier agreements">Sécurité dans les accords fournisseurs</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.5.21</span><span class="ref-text" data-fr="Sécurité dans la chaîne d'appro ICT" data-en="Information security in ICT supply chain">Sécurité dans la chaîne d'appro ICT</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.5.22</span><span class="ref-text" data-fr="Surveillance et revue des services tiers" data-en="Monitoring and review of supplier services">Surveillance et revue des services tiers</span></div>
+        </div></td>
+        <td class="col-iso42"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso42">A.8.6</span><span class="ref-text" data-fr="Évaluation fournisseurs IA (due diligence)" data-en="AI supplier evaluation (due diligence)">Évaluation fournisseurs IA (due diligence)</span></div>
+          <div class="ref-item"><span class="ref-code code-iso42">A.5.5</span><span class="ref-text" data-fr="Transparence des systèmes IA tiers" data-en="Transparency of third-party AI systems">Transparence des systèmes IA tiers</span></div>
+        </div></td>
+        <td class="col-cis"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-cis">CIS 15</span><span class="ref-text" data-fr="Gestion des prestataires de services" data-en="Service Provider Management">Gestion des prestataires de services</span></div>
+        </div></td>
+        <td class="col-itil"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-itil">Supplier</span><span class="ref-text" data-fr="Supplier Management — évaluation et SLA fournisseurs" data-en="Supplier Management — supplier evaluation and SLAs">Supplier Management — évaluation et SLA fournisseurs</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">SLM</span><span class="ref-text" data-fr="Service Level Management — suivi des engagements tiers" data-en="Service Level Management — third-party commitment tracking">Service Level Management — suivi des engagements tiers</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">Relation</span><span class="ref-text" data-fr="Relationship Management — gouvernance des partenaires" data-en="Relationship Management — partner governance">Relationship Management — gouvernance des partenaires</span></div>
+        </div></td>
+        <td class="col-cobit"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-cobit">APO10</span><span class="ref-text" data-fr="Gérer les fournisseurs — sélection, contrats, TPRM" data-en="Managed Suppliers — selection, contracts, TPRM">Gérer les fournisseurs — sélection, contrats, TPRM</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">APO09</span><span class="ref-text" data-fr="Gérer les accords de service — SLA et révision" data-en="Managed Service Agreements — SLAs and review">Gérer les accords de service — SLA et révision</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">MEA03</span><span class="ref-text" data-fr="Gérer la conformité externe — obligations contractuelles" data-en="Managed Compliance — contractual obligations">Gérer la conformité externe — obligations contractuelles</span></div>
+        </div></td>
+      </tr>
+
+      <!-- 15 CONFORMITÉ & AUDIT -->
+      <tr data-domain="gov">
+        <td><div class="domain-cell"><span class="domain-num">15</span><span class="domain-name" data-i18n="d_15_name">Conformité, Audit &amp; Amélioration</span><span class="domain-tag tag-gov" data-i18n="f_gov">Gouvernance</span></div></td>
+        <td class="col-nist"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-nist">GV.OV</span><span class="ref-text" data-fr="Supervision de la stratégie (Board)" data-en="Oversight of strategy (Board)">Supervision de la stratégie (Board)</span></div>
+          <div class="ref-item"><span class="ref-code code-nist">ID.IM</span><span class="ref-text" data-fr="Amélioration continue (benchmarking)" data-en="Continual improvement (benchmarking)">Amélioration continue (benchmarking)</span></div>
+        </div></td>
+        <td class="col-iso27"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso27">§9.1</span><span class="ref-text" data-fr="Surveillance, mesure, analyse" data-en="Monitoring, measurement, analysis and evaluation">Surveillance, mesure, analyse</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">§9.2</span><span class="ref-text" data-fr="Audit interne du SMSI" data-en="Internal audit of the ISMS">Audit interne du SMSI</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">§9.3</span><span class="ref-text" data-fr="Revue de direction" data-en="Management review">Revue de direction</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">§10</span><span class="ref-text" data-fr="Non-conformités et amélioration continue" data-en="Nonconformity, corrective action and continual improvement">Non-conformités et amélioration continue</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.5.36</span><span class="ref-text" data-fr="Conformité aux politiques et normes" data-en="Compliance with policies, rules and standards">Conformité aux politiques et normes</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.5.37</span><span class="ref-text" data-fr="Procédures d'exploitation documentées" data-en="Documented operating procedures">Procédures d'exploitation documentées</span></div>
+        </div></td>
+        <td class="col-iso42"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso42">§9.1</span><span class="ref-text" data-fr="Surveillance et mesure du SMIA" data-en="Monitoring and measurement of the AI management system">Surveillance et mesure du SMIA</span></div>
+          <div class="ref-item"><span class="ref-code code-iso42">§9.2</span><span class="ref-text" data-fr="Audit interne du système IA" data-en="Internal audit of the AI management system">Audit interne du système IA</span></div>
+          <div class="ref-item"><span class="ref-code code-iso42">A.5.6</span><span class="ref-text" data-fr="Conformité réglementaire IA (EU AI Act)" data-en="AI regulatory compliance (EU AI Act)">Conformité réglementaire IA (EU AI Act)</span></div>
+        </div></td>
+        <td class="col-cis"><span class="empty-cell" data-fr="— Non couvert directement" data-en="— Not directly covered">— Non couvert directement</span></td>
+        <td class="col-itil"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-itil">CI</span><span class="ref-text" data-fr="Continual Improvement — cycle PDCA et plans d'amélioration" data-en="Continual Improvement — PDCA cycle and improvement plans">Continual Improvement — cycle PDCA et plans d'amélioration</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">M&amp;R</span><span class="ref-text" data-fr="Measurement &amp; Reporting — indicateurs de maturité et conformité" data-en="Measurement &amp; Reporting — maturity and compliance indicators">Measurement &amp; Reporting — indicateurs de maturité et conformité</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">Audit</span><span class="ref-text" data-fr="SVS Governance — revue de direction et audit interne" data-en="SVS Governance — management review and internal audit">SVS Governance — revue de direction et audit interne</span></div>
+        </div></td>
+        <td class="col-cobit"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-cobit">MEA01</span><span class="ref-text" data-fr="Gérer la surveillance — indicateurs et tableaux de bord" data-en="Managed Performance and Conformance Monitoring — KPIs and dashboards">Gérer la surveillance — indicateurs et tableaux de bord</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">MEA02</span><span class="ref-text" data-fr="Gérer le contrôle interne — audit et assurance" data-en="Managed System of Internal Control — audit and assurance">Gérer le contrôle interne — audit et assurance</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">MEA03</span><span class="ref-text" data-fr="Gérer la conformité externe — réglementaire et légale" data-en="Managed Compliance with External Requirements — regulatory and legal">Gérer la conformité externe — réglementaire et légale</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">MEA04</span><span class="ref-text" data-fr="Gérer l'assurance — revue indépendante et maturité" data-en="Managed Assurance — independent review and maturity">Gérer l'assurance — revue indépendante et maturité</span></div>
+        </div></td>
+      </tr>
+      <tr data-domain="gov">
+        <td><div class="domain-cell"><span class="domain-num">16</span><span class="domain-name" data-i18n="d_16_name">Sécurité RH &amp; gestion du personnel</span><span class="domain-tag tag-gov" data-i18n="f_gov">Gouvernance</span></div></td>
+        <td class="col-nist"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-nist">GV.RR</span><span class="ref-text" data-fr="Rôles, responsabilités &amp; RACI" data-en="Roles, responsibilities &amp; RACI">Rôles, responsabilités &amp; RACI</span></div>
+          <div class="ref-item"><span class="ref-code code-nist">PR.AT</span><span class="ref-text" data-fr="Sensibilisation du personnel" data-en="Personnel awareness">Sensibilisation du personnel</span></div>
+        </div></td>
+        <td class="col-iso27"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso27">A.6.1</span><span class="ref-text" data-fr="Sélection et vérification (screening)" data-en="Screening">Sélection et vérification (screening)</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.6.2</span><span class="ref-text" data-fr="Termes et conditions d'emploi" data-en="Terms and conditions of employment">Termes et conditions d'emploi</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.6.4</span><span class="ref-text" data-fr="Processus disciplinaire" data-en="Disciplinary process">Processus disciplinaire</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.6.5</span><span class="ref-text" data-fr="Responsabilités à la fin du contrat" data-en="Responsibilities after termination or change of employment">Responsabilités à la fin du contrat</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.6.8</span><span class="ref-text" data-fr="Signalement des événements sécurité" data-en="Reporting of information security events">Signalement des événements sécurité</span></div>
+        </div></td>
+        <td class="col-iso42"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso42">A.6.3</span><span class="ref-text" data-fr="Responsabilisation des équipes IA" data-en="AI team accountability">Responsabilisation des équipes IA</span></div>
+          <div class="ref-item"><span class="ref-code code-iso42">A.6.5</span><span class="ref-text" data-fr="Comité d'éthique IA" data-en="AI ethics committee">Comité d'éthique IA</span></div>
+        </div></td>
+        <td class="col-cis"><span class="empty-cell" data-fr="— Non couvert directement" data-en="— Not directly covered">— Non couvert directement</span></td>
+        <td class="col-itil"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-itil">WTM</span><span class="ref-text" data-fr="Workforce &amp; Talent Management — onboarding / offboarding sécurisé" data-en="Workforce &amp; Talent Management — secure onboarding / offboarding">Workforce &amp; Talent Management — onboarding / offboarding sécurisé</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">OCM</span><span class="ref-text" data-fr="Organizational Change Management — sensibilisation aux changements" data-en="Organizational Change Management — change awareness">Organizational Change Management — sensibilisation aux changements</span></div>
+        </div></td>
+        <td class="col-cobit"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-cobit">APO07</span><span class="ref-text" data-fr="Gérer les ressources humaines IT — rôles, recrutement, départ" data-en="Managed Human Resources — roles, hiring, departure">Gérer les ressources humaines IT — rôles, recrutement, départ</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">APO01</span><span class="ref-text" data-fr="Gérer le cadre IT — responsabilités et comportements" data-en="Managed I&T Management Framework — responsibilities and behaviours">Gérer le cadre IT — responsabilités et comportements</span></div>
+        </div></td>
+      </tr>
+      <tr data-domain="ia">
+        <td><div class="domain-cell"><span class="domain-num">17</span><span class="domain-name" data-i18n="d_17_name">Gouvernance &amp; Éthique de l'IA</span><span class="domain-tag tag-ia" data-i18n="f_ia">IA</span></div></td>
+        <td class="col-nist"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-nist">GV.OC</span><span class="ref-text" data-fr="Contexte incluant les usages IA émergents" data-en="Context including emerging AI uses">Contexte incluant les usages IA émergents</span></div>
+          <div class="ref-item"><span class="ref-code code-nist">ID.RA</span><span class="ref-text" data-fr="Risques liés aux systèmes IA (NIST AI RMF)" data-en="AI system risks (NIST AI RMF)">Risques liés aux systèmes IA (NIST AI RMF)</span></div>
+        </div></td>
+        <td class="col-iso27"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso27">A.5.7</span><span class="ref-text" data-fr="Threat intelligence (deepfakes, prompt injection)" data-en="Threat intelligence (deepfakes, prompt injection)">Threat intelligence (deepfakes, prompt injection)</span></div>
+          <div class="ref-item"><span class="ref-code code-iso27">A.8.16</span><span class="ref-text" data-fr="Détection des comportements IA anormaux" data-en="Detection of abnormal AI behaviour">Détection des comportements IA anormaux</span></div>
+        </div></td>
+        <td class="col-iso42"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-iso42">A.2</span><span class="ref-text" data-fr="Politique de gouvernance IA" data-en="AI governance policy">Politique de gouvernance IA</span></div>
+          <div class="ref-item"><span class="ref-code code-iso42">A.3</span><span class="ref-text" data-fr="Principes éthiques IA (équité, transparence)" data-en="AI ethical principles (fairness, transparency)">Principes éthiques IA (équité, transparence)</span></div>
+          <div class="ref-item"><span class="ref-code code-iso42">A.4</span><span class="ref-text" data-fr="Évaluation d'impact (AIIA)" data-en="Impact assessment (AIIA)">Évaluation d'impact (AIIA)</span></div>
+          <div class="ref-item"><span class="ref-code code-iso42">A.5</span><span class="ref-text" data-fr="Objectifs &amp; responsabilités IA" data-en="AI objectives &amp; responsibilities">Objectifs &amp; responsabilités IA</span></div>
+          <div class="ref-item"><span class="ref-code code-iso42">A.6</span><span class="ref-text" data-fr="Ressources humaines et compétences IA" data-en="Human resources and AI competencies">Ressources humaines et compétences IA</span></div>
+          <div class="ref-item"><span class="ref-code code-iso42">A.11</span><span class="ref-text" data-fr="Surveillance post-déploiement des modèles IA" data-en="Post-deployment monitoring of AI models">Surveillance post-déploiement des modèles IA</span></div>
+        </div></td>
+        <td class="col-cis"><span class="empty-cell" data-fr="— Hors périmètre CIS v8" data-en="— Outside CIS v8 scope">— Hors périmètre CIS v8</span></td>
+        <td class="col-itil"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-itil">Stratégie</span><span class="ref-text" data-fr="Strategy Management — intégration de l'IA dans la stratégie IT" data-en="Strategy Management — AI integration into IT strategy">Strategy Management — intégration de l'IA dans la stratégie IT</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">CI</span><span class="ref-text" data-fr="Continual Improvement — amélioration des systèmes IA déployés" data-en="Continual Improvement — improvement of deployed AI systems">Continual Improvement — amélioration des systèmes IA déployés</span></div>
+          <div class="ref-item"><span class="ref-code code-itil">Risk</span><span class="ref-text" data-fr="Risk Management — risques éthiques et opérationnels IA" data-en="Risk Management — AI ethical and operational risks">Risk Management — risques éthiques et opérationnels IA</span></div>
+        </div></td>
+        <td class="col-cobit"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-cobit">APO04</span><span class="ref-text" data-fr="Gérer l'innovation — cadrage des initiatives IA" data-en="Managed Innovation — AI initiative scoping">Gérer l'innovation — cadrage des initiatives IA</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">EDM01</span><span class="ref-text" data-fr="Assurer la gouvernance — supervision des systèmes IA" data-en="Ensure governance framework — AI system oversight">Assurer la gouvernance — supervision des systèmes IA</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">APO12</span><span class="ref-text" data-fr="Gérer les risques — risques éthiques et biais algorithmiques" data-en="Managed Risk — ethical risks and algorithmic bias">Gérer les risques — risques éthiques et biais algorithmiques</span></div>
+          <div class="ref-item"><span class="ref-code code-cobit">MEA03</span><span class="ref-text" data-fr="Gérer la conformité — EU AI Act et obligations réglementaires" data-en="Managed Compliance — EU AI Act and regulatory obligations">Gérer la conformité — EU AI Act et obligations réglementaires</span></div>
+        </div></td>
+      </tr>
+
+      <tr id="no-results-row">
+        <td colspan="7"><div class="no-results"><span data-i18n="no_results">// AUCUN RÉSULTAT POUR CE FILTRE</span></div></td>
+      </tr>
+
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<script>
+  const activeNorms = { nist: true, iso27: true, iso42: true, cis: true, itil: true, cobit: true };
+  let activeDomain = 'all';
+
+  function toggleNorm(norm) {
+    activeNorms[norm] = !activeNorms[norm];
+    const badge = document.querySelector(`.badge.${norm}`);
+    badge.classList.toggle('inactive', !activeNorms[norm]);
+    updateColumns();
+  }
+
+  function updateColumns() {
+    const norms = ['nist', 'iso27', 'iso42', 'cis', 'itil', 'cobit'];
+    norms.forEach(norm => {
+      const cells = document.querySelectorAll(`.col-${norm}`);
+      cells.forEach(c => c.style.display = activeNorms[norm] ? '' : 'none');
+    });
+  }
+
+  function filterDomain(domain, btn) {
+    activeDomain = domain;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const rows = document.querySelectorAll('tbody tr[data-domain]');
+    let visible = 0;
+    rows.forEach(row => {
+      const show = domain === 'all' || row.dataset.domain === domain;
+      row.classList.toggle('hidden', !show);
+      if (show) visible++;
+    });
+    const noResults = document.getElementById('no-results-row');
+    noResults.classList.toggle('visible', visible === 0);
+  }
+
+
+  // ─── i18n ───────────────────────────────────────────────
+  const i18n = {
+    fr: {
+      eyebrow: 'Cartographie des référentiels · 2024–2025',
+      subtitle: 'Comme la pierre de Rosette permettait de déchiffrer trois langues en parallèle, Rosettable traduit et aligne 6 référentiels de sécurité sur 17 domaines — NIST CSF 2.0, ISO 27001, ISO 42001, CIS Controls v8, ITIL v4 &amp; COBIT 2019',
+      legend_hint: 'Cliquer pour masquer une norme',
+      label_norms: 'Normes ·',
+      label_domains: 'Domaines ·',
+      f_all: 'Tous', f_gov: 'Gouvernance', f_risk: 'Risque',
+      f_ops: 'Opérations', f_tech: 'Technique', f_cyber: 'Cyber Ops', f_ia: 'IA',
+      stat_domains: 'Domaines', stat_norms: 'Normes',
+      stat_iso27: 'Contrôles ISO 27001', stat_cis: 'Contrôles CIS',
+      th_domain: 'Domaine',
+      no_results: '// AUCUN RÉSULTAT POUR CE FILTRE',
+      d_01_name: 'Gouvernance & Politique de sécurité',
+      d_02_name: 'Gestion des risques',
+      d_03_name: 'Gestion des actifs',
+      d_04_name: 'Contrôle des accès & Identités (IAM)',
+      d_05_name: 'Sensibilisation & Formation',
+      d_06_name: 'Sécurité physique & environnementale',
+      d_07_name: 'Sécurisation des configurations (Hardening)',
+      d_08_name: 'Protection des données & Chiffrement',
+      d_09_name: 'Sécurité réseau & Infrastructure',
+      d_10_name: 'Sécurité applicative & DevSecOps',
+      d_11_name: 'Surveillance & Détection',
+      d_12_name: 'Réponse aux incidents',
+      d_13_name: 'Continuité & Résilience (BCP/DR)',
+      d_14_name: 'Gestion des fournisseurs & TPRM',
+      d_15_name: 'Conformité, Audit & Amélioration',
+      d_16_name: 'Sécurité RH & gestion du personnel',
+      d_17_name: 'Gouvernance & Éthique de l\'IA',
+      dtag_gov: 'Gouvernance', dtag_risk: 'Risque', dtag_ops: 'Opérations',
+      dtag_tech: 'Technique', dtag_cyber: 'Cyber Ops', dtag_ia: 'IA',
+    },
+    en: {
+      eyebrow: 'Framework Mapping · 2024–2025',
+      subtitle: 'Just as the Rosetta Stone decoded three scripts in parallel, Rosettable translates and aligns 6 security frameworks across 17 domains — NIST CSF 2.0, ISO 27001, ISO 42001, CIS Controls v8, ITIL v4 &amp; COBIT 2019',
+      legend_hint: 'Click to hide a framework',
+      label_norms: 'Frameworks ·',
+      label_domains: 'Domains ·',
+      f_all: 'All', f_gov: 'Governance', f_risk: 'Risk',
+      f_ops: 'Operations', f_tech: 'Technical', f_cyber: 'Cyber Ops', f_ia: 'AI',
+      stat_domains: 'Domains', stat_norms: 'Frameworks',
+      stat_iso27: 'ISO 27001 Controls', stat_cis: 'CIS Controls',
+      th_domain: 'Domain',
+      no_results: '// NO RESULTS FOR THIS FILTER',
+      d_01_name: 'Governance & Security Policy',
+      d_02_name: 'Risk Management',
+      d_03_name: 'Asset Management',
+      d_04_name: 'Access Control & Identity Management (IAM)',
+      d_05_name: 'Awareness & Training',
+      d_06_name: 'Physical & Environmental Security',
+      d_07_name: 'Configuration Management (Hardening)',
+      d_08_name: 'Data Protection & Encryption',
+      d_09_name: 'Network Security & Infrastructure',
+      d_10_name: 'Application Security & DevSecOps',
+      d_11_name: 'Monitoring & Detection',
+      d_12_name: 'Incident Response',
+      d_13_name: 'Continuity & Resilience (BCP/DR)',
+      d_14_name: 'Supplier Management & TPRM',
+      d_15_name: 'Compliance, Audit & Improvement',
+      d_16_name: 'HR Security & Personnel Management',
+      d_17_name: 'AI Governance & Ethics',
+      dtag_gov: 'Governance', dtag_risk: 'Risk', dtag_ops: 'Operations',
+      dtag_tech: 'Technical', dtag_cyber: 'Cyber Ops', dtag_ia: 'AI',
+    }
+  };
+
+  let currentLang = 'fr';
+
+  function applyLang(lang) {
+    const t = i18n[lang];
+    // Static UI elements with data-i18n
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      if (t[key] !== undefined) el.innerHTML = t[key];
+    });
+    // ref-text and empty-cell spans with data-fr / data-en
+    document.querySelectorAll('[data-fr][data-en]').forEach(el => {
+      el.textContent = el.dataset[lang];
+    });
+  }
+
+  function toggleLanguage() {
+    currentLang = currentLang === 'fr' ? 'en' : 'fr';
+    applyLang(currentLang);
+    document.getElementById('langLabel').textContent = currentLang === 'fr' ? 'English' : 'Français';
+  }
+
+  let isDark = false;
+  function toggleTheme() {
+    isDark = !isDark;
+    document.body.classList.toggle('dark', isDark);
+    document.getElementById('themeIcon').textContent = isDark ? '☀️' : '🌙';
+    document.getElementById('themeLabel').textContent = isDark ? 'Mode clair' : 'Mode sombre';
+  }
+</script>
+
+</body>
+</html>
