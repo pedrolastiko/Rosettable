@@ -128,6 +128,16 @@
   }
   .header-inner { max-width: 1400px; margin: 0 auto; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
   .header-text { flex: 1; }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .brand-logo {
+    font-size: 26px;
+    line-height: 1;
+    transform: translateY(-1px);
+  }
   .eyebrow {
     font-family: 'DM Mono', monospace;
     font-size: 11px;
@@ -362,7 +372,7 @@
   <div class="header-inner">
     <div class="header-text">
       <div class="eyebrow" data-i18n="eyebrow">Cartographie des référentiels · 2024–2025</div>
-      <h1>Rosettable</h1>
+      <h1 class="brand"><span class="brand-logo" aria-hidden="true">🪨</span><span>Rosettable</span></h1>
       <p class="subtitle" data-i18n="subtitle">Comme la pierre de Rosette permettait de déchiffrer trois langues en parallèle, Rosettable traduit et aligne 6 référentiels de sécurité sur 17 domaines — NIST CSF 2.0, ISO 27001, ISO 42001, CIS Controls v8, ITIL v4 &amp; COBIT 2019</p>
     </div>
     <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end;flex-shrink:0;">
