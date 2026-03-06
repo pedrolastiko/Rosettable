@@ -370,6 +370,20 @@
   .no-results { text-align: center; padding: 48px; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.1em; }
   #no-results-row { display: none; }
   #no-results-row.visible { display: table-row; }
+
+  .site-footer {
+    border-top: 1px solid var(--border);
+    padding: 18px 32px 24px;
+    color: var(--muted);
+    font-size: 12px;
+    text-align: center;
+  }
+  .site-footer a {
+    color: var(--nist);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .site-footer a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -998,6 +1012,11 @@
   </div>
 </div>
 
+<footer class="site-footer">
+  <span data-i18n="footer_note">Open source project under the MIT license, made with ❤️ in Canada.</span>
+  <a href="https://github.com/pedrolastiko/Rossetable" target="_blank" rel="noopener noreferrer">GitHub</a>
+</footer>
+
 <script>
   const activeNorms = { nist: true, iso27: true, iso42: true, cis: true, itil: true, cobit: true };
   let activeDomain = 'all';
@@ -1047,6 +1066,7 @@
       stat_iso27: 'Contrôles ISO 27001', stat_cis: 'Contrôles CIS',
       th_domain: 'Domaine',
       no_results: '// AUCUN RÉSULTAT POUR CE FILTRE',
+      footer_note: 'Projet open source sous licence MIT, fait avec ❤️ au Canada.',
       d_01_name: 'Gouvernance & Politique de sécurité',
       d_02_name: 'Gestion des risques',
       d_03_name: 'Gestion des actifs',
@@ -1079,6 +1099,7 @@
       stat_iso27: 'ISO 27001 Controls', stat_cis: 'CIS Controls',
       th_domain: 'Domain',
       no_results: '// NO RESULTS FOR THIS FILTER',
+      footer_note: 'Open source project under the MIT license, made with ❤️ in Canada.',
       d_01_name: 'Governance & Security Policy',
       d_02_name: 'Risk Management',
       d_03_name: 'Asset Management',
