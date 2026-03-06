@@ -20,6 +20,7 @@
     --cis: #d97706;
     --itil: #0891b2;
     --cobit: #e11d48;
+    --euai: #7e22ce;
     --h1-color: #0f172a;
     --stat-color: #0f172a;
     --domain-name: #0f172a;
@@ -39,10 +40,11 @@
     --badge-cis-bg:   #fffbeb;  --badge-cis-border:   rgba(217,119,6,0.25);
     --badge-itil-bg:  #ecfeff;  --badge-itil-border:  rgba(8,145,178,0.25);
     --badge-cobit-bg: #fff1f2;  --badge-cobit-border: rgba(225,29,72,0.25);
+    --badge-euai-bg: #f5e8ff;   --badge-euai-border: rgba(126,34,206,0.25);
     --th-nist-bg:  #eff4ff;  --th-iso27-bg: #ecfdf5; --th-iso42-bg: #f5f3ff;
-    --th-cis-bg:   #fffbeb;  --th-itil-bg:  #ecfeff; --th-cobit-bg: #fff1f2;
+    --th-cis-bg:   #fffbeb;  --th-itil-bg:  #ecfeff; --th-cobit-bg: #fff1f2; --th-euai-bg: #f5e8ff;
     --code-nist-bg:  #dbeafe; --code-iso27-bg: #d1fae5; --code-iso42-bg: #ede9fe;
-    --code-cis-bg:   #fef3c7; --code-itil-bg:  #cffafe; --code-cobit-bg: #ffe4e6;
+    --code-cis-bg:   #fef3c7; --code-itil-bg:  #cffafe; --code-cobit-bg: #ffe4e6; --code-euai-bg: #f3e8ff;
     --tag-gov-bg: #f1f5f9;  --tag-gov-c: #475569;
     --tag-risk-bg:#fff1f2;  --tag-risk-c:#be123c;
     --tag-ops-bg: #eff6ff;  --tag-ops-c: #1d4ed8;
@@ -65,6 +67,7 @@
     --cis: #f59e0b;
     --itil: #06b6d4;
     --cobit: #f43f5e;
+    --euai: #c084fc;
     --h1-color: #ffffff;
     --stat-color: #ffffff;
     --domain-name: #ffffff;
@@ -84,11 +87,12 @@
     --badge-cis-bg:   rgba(245,158,11,0.08);  --badge-cis-border:   rgba(245,158,11,0.2);
     --badge-itil-bg:  rgba(6,182,212,0.08);   --badge-itil-border:  rgba(6,182,212,0.2);
     --badge-cobit-bg: rgba(244,63,94,0.08);   --badge-cobit-border: rgba(244,63,94,0.2);
+    --badge-euai-bg: rgba(126,34,206,0.1);   --badge-euai-border: rgba(126,34,206,0.25);
     --th-nist-bg:  #0b1220; --th-iso27-bg: #0a1a14; --th-iso42-bg: #120d1a;
-    --th-cis-bg:   #1a1508; --th-itil-bg:  #061418; --th-cobit-bg: #1a080c;
+    --th-cis-bg:   #1a1508; --th-itil-bg:  #061418; --th-cobit-bg: #1a080c; --th-euai-bg: #16081f;
     --code-nist-bg:  rgba(59,130,246,0.15);  --code-iso27-bg: rgba(16,185,129,0.15);
     --code-iso42-bg: rgba(168,85,247,0.15);  --code-cis-bg:   rgba(245,158,11,0.15);
-    --code-itil-bg:  rgba(6,182,212,0.15);   --code-cobit-bg: rgba(244,63,94,0.15);
+    --code-itil-bg:  rgba(6,182,212,0.15);   --code-cobit-bg: rgba(244,63,94,0.15); --code-euai-bg: rgba(126,34,206,0.18);
     --tag-gov-bg: rgba(100,116,139,0.15); --tag-gov-c: #94a3b8;
     --tag-risk-bg:rgba(239,68,68,0.1);    --tag-risk-c:#f87171;
     --tag-ops-bg: rgba(59,130,246,0.1);   --tag-ops-c: #93c5fd;
@@ -238,12 +242,14 @@
   .badge.cis   { color: var(--cis);   background: var(--badge-cis-bg);   border-color: var(--badge-cis-border); }
   .badge.itil  { color: var(--itil);  background: var(--badge-itil-bg);  border-color: var(--badge-itil-border); }
   .badge.cobit { color: var(--cobit); background: var(--badge-cobit-bg); border-color: var(--badge-cobit-border); }
+  .badge.euai { color: var(--euai); background: var(--badge-euai-bg); border-color: var(--badge-euai-border); }
   .badge.nist  .dot { background: var(--nist); }
   .badge.iso27 .dot { background: var(--iso27); }
   .badge.iso42 .dot { background: var(--iso42); }
   .badge.cis   .dot { background: var(--cis); }
   .badge.itil  .dot { background: var(--itil); }
   .badge.cobit .dot { background: var(--cobit); }
+  .badge.euai .dot { background: var(--euai); }
   .badge.inactive { opacity: 0.35; filter: grayscale(0.6); }
 
   .sep { width: 1px; height: 20px; background: var(--border); }
@@ -325,6 +331,7 @@
   thead th.col-cis   { color: var(--cis);   background: var(--th-cis-bg);   border-left: 2px solid var(--cis); }
   thead th.col-itil  { color: var(--itil);  background: var(--th-itil-bg);  border-left: 2px solid var(--itil); }
   thead th.col-cobit { color: var(--cobit); background: var(--th-cobit-bg); border-left: 2px solid var(--cobit); }
+  thead th.col-euai { color: var(--euai); background: var(--th-euai-bg); border-left: 2px solid var(--euai); }
 
   tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
   tbody tr:last-child { border-bottom: none; }
@@ -353,6 +360,7 @@
   td.col-cis   { border-left: 1px solid rgba(217,119,6,0.18); }
   td.col-itil  { border-left: 1px solid rgba(8,145,178,0.18); }
   td.col-cobit { border-left: 1px solid rgba(225,29,72,0.18); }
+  td.col-euai  { border-left: 1px solid rgba(126,34,206,0.22); }
 
   .ref-list { display: flex; flex-direction: column; gap: 4px; }
   .ref-item { display: flex; align-items: flex-start; gap: 6px; line-height: 1.4; }
@@ -363,6 +371,7 @@
   .code-cis   { background: var(--code-cis-bg);   color: var(--cis); }
   .code-itil  { background: var(--code-itil-bg);  color: var(--itil); }
   .code-cobit { background: var(--code-cobit-bg); color: var(--cobit); }
+  .code-euai  { background: var(--code-euai-bg); color: var(--euai); }
 
   .ref-text { color: var(--ref-text); font-size: 12px; transition: color 0.25s; }
   .empty-cell { color: var(--empty-cell); font-family: 'DM Mono', monospace; font-size: 11px; transition: color 0.25s; }
@@ -393,7 +402,7 @@
     <div class="header-text">
       <div class="eyebrow" data-i18n="eyebrow">Cartographie des référentiels</div>
       <h1 class="brand"><span class="brand-logo" aria-hidden="true">🪨</span><span>Rosettable</span></h1>
-      <p class="subtitle" data-i18n="subtitle">Comme la pierre de Rosette permettait de déchiffrer trois langues en parallèle, Rosettable traduit et aligne 6 référentiels de sécurité sur 17 domaines — NIST CSF 2.0, ISO 27001, ISO 42001, CIS Controls v8, ITIL v4 &amp; COBIT 2019</p>
+      <p class="subtitle" data-i18n="subtitle">Comme la pierre de Rosette permettait de déchiffrer trois langues en parallèle, Rosettable traduit et aligne 7 référentiels de sécurité sur 17 domaines — NIST CSF 2.0, ISO 27001, ISO 42001, CIS Controls v8, ITIL v4, COBIT 2019 &amp; EU AI Act</p>
     </div>
     <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end;flex-shrink:0;">
     <button class="theme-toggle" id="langBtn" onclick="toggleLanguage()" style="gap:6px;">
@@ -418,6 +427,7 @@
     <span class="badge cis"   onclick="toggleNorm('cis')"><span class="dot"></span>CIS Controls v8</span>
     <span class="badge itil"  onclick="toggleNorm('itil')"><span class="dot"></span>ITIL v4</span>
     <span class="badge cobit" onclick="toggleNorm('cobit')"><span class="dot"></span>COBIT 2019</span>
+    <span class="badge euai" onclick="toggleNorm('euai')"><span class="dot"></span>EU AI Act</span>
     <span class="sep"></span>
     <span class="filter-label" style="font-size:10px;color:#475569" data-i18n="legend_hint">Cliquer pour masquer une norme</span>
   </div>
@@ -438,7 +448,7 @@
 
 <div class="stats">
   <div class="stat"><span class="stat-value">17</span><span class="stat-label" data-i18n="stat_domains">Domaines</span></div>
-  <div class="stat"><span class="stat-value">6</span><span class="stat-label" data-i18n="stat_norms">Normes</span></div>
+  <div class="stat"><span class="stat-value">7</span><span class="stat-label" data-i18n="stat_norms">Normes</span></div>
   <div class="stat"><span class="stat-value">93</span><span class="stat-label" data-i18n="stat_iso27">Contrôles ISO 27001</span></div>
   <div class="stat"><span class="stat-value">18</span><span class="stat-label" data-i18n="stat_cis">Contrôles CIS</span></div>
 </div>
@@ -455,6 +465,7 @@
         <th class="col-cis">CIS Controls v8</th>
         <th class="col-itil">ITIL v4</th>
         <th class="col-cobit">COBIT 2019</th>
+        <th class="col-euai">EU AI Act</th>
       </tr>
     </thead>
     <tbody>
@@ -491,6 +502,9 @@
           <div class="ref-item"><span class="ref-code code-cobit">APO01</span><span class="ref-text" data-fr="Gérer le cadre de management IT" data-en="Managed I&T Management Framework">Gérer le cadre de management IT</span></div>
           <div class="ref-item"><span class="ref-code code-cobit">APO13</span><span class="ref-text" data-fr="Gérer la sécurité de l'information (politique SMSI)" data-en="Managed Security (information security policy, ISMS)">Gérer la sécurité de l'information (politique SMSI)</span></div>
         </div></td>
+        <td class="col-euai"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-euai">Art. 4 & 26</span><span class="ref-text" data-fr="Culture de la maîtrise de l'IA et gouvernance des déploiements" data-en="AI literacy and governance of deployments">Culture de la maîtrise de l'IA et gouvernance des déploiements</span></div>
+        </div></td>
       </tr>
       <tr data-domain="risk">
         <td><div class="domain-cell"><span class="domain-num">02</span><span class="domain-name" data-i18n="d_02_name">Gestion des risques</span><span class="domain-tag tag-risk" data-i18n="f_risk">Risque</span></div></td>
@@ -518,6 +532,9 @@
           <div class="ref-item"><span class="ref-code code-cobit">EDM03</span><span class="ref-text" data-fr="Assurer l'optimisation des risques" data-en="Ensure risk optimisation">Assurer l'optimisation des risques</span></div>
           <div class="ref-item"><span class="ref-code code-cobit">APO12</span><span class="ref-text" data-fr="Gérer les risques IT (risk register, scénarios)" data-en="Managed Risk — risk register, scenarios">Gérer les risques IT (risk register, scénarios)</span></div>
           <div class="ref-item"><span class="ref-code code-cobit">APO11</span><span class="ref-text" data-fr="Gérer la qualité — lié à l'amélioration continue" data-en="Managed Quality — linked to continual improvement">Gérer la qualité — lié à l'amélioration continue</span></div>
+        </div></td>
+        <td class="col-euai"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-euai">Art. 9</span><span class="ref-text" data-fr="Système de gestion des risques pour les IA à haut risque" data-en="Risk management system for high-risk AI">Système de gestion des risques pour les IA à haut risque</span></div>
         </div></td>
       </tr>
       <tr data-domain="ops">
@@ -550,6 +567,9 @@
           <div class="ref-item"><span class="ref-code code-cobit">BAI09</span><span class="ref-text" data-fr="Gérer les actifs IT (inventaire, CMDB)" data-en="Managed Assets — inventory, CMDB">Gérer les actifs IT (inventaire, CMDB)</span></div>
           <div class="ref-item"><span class="ref-code code-cobit">APO03</span><span class="ref-text" data-fr="Gérer l'architecture d'entreprise" data-en="Managed Enterprise Architecture">Gérer l'architecture d'entreprise</span></div>
           <div class="ref-item"><span class="ref-code code-cobit">APO04</span><span class="ref-text" data-fr="Gérer l'innovation — classification des actifs numériques" data-en="Managed Innovation — digital asset classification">Gérer l'innovation — classification des actifs numériques</span></div>
+        </div></td>
+        <td class="col-euai"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-euai">Art. 11</span><span class="ref-text" data-fr="Documentation technique et gouvernance du cycle de vie" data-en="Technical documentation and lifecycle governance">Documentation technique et gouvernance du cycle de vie</span></div>
         </div></td>
       </tr>
 
@@ -587,6 +607,9 @@
           <div class="ref-item"><span class="ref-code code-cobit">APO13</span><span class="ref-text" data-fr="Gérer la sécurité — politique de contrôle d'accès" data-en="Managed Security — access control policy">Gérer la sécurité — politique de contrôle d'accès</span></div>
           <div class="ref-item"><span class="ref-code code-cobit">BAI10</span><span class="ref-text" data-fr="Gérer la configuration — gestion des droits" data-en="Managed Configuration — access rights management">Gérer la configuration — gestion des droits</span></div>
         </div></td>
+        <td class="col-euai"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-euai">Art. 10</span><span class="ref-text" data-fr="Gouvernance des données et qualité des jeux de données" data-en="Data governance and dataset quality">Gouvernance des données et qualité des jeux de données</span></div>
+        </div></td>
       </tr>
 
       <!-- 05 SENSIBILISATION & FORMATION -->
@@ -619,6 +642,9 @@
           <div class="ref-item"><span class="ref-code code-cobit">DSS05</span><span class="ref-text" data-fr="Gérer les services de sécurité — sensibilisation cyber" data-en="Managed Security Services — cybersecurity awareness">Gérer les services de sécurité — sensibilisation cyber</span></div>
           <div class="ref-item"><span class="ref-code code-cobit">APO01</span><span class="ref-text" data-fr="Gérer le cadre IT — culture et comportements attendus" data-en="Managed I&T Management Framework — culture and expected behaviours">Gérer le cadre IT — culture et comportements attendus</span></div>
         </div></td>
+        <td class="col-euai"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-euai">Art. 4</span><span class="ref-text" data-fr="Compétences et sensibilisation des équipes impliquées" data-en="Competence and awareness of involved teams">Compétences et sensibilisation des équipes impliquées</span></div>
+        </div></td>
       </tr>
 
       <!-- 06 SÉCURITÉ PHYSIQUE -->
@@ -646,6 +672,9 @@
         <td class="col-cobit"><div class="ref-list">
           <div class="ref-item"><span class="ref-code code-cobit">DSS05</span><span class="ref-text" data-fr="Gérer les services de sécurité — protection physique des systèmes" data-en="Managed Security Services — physical system protection">Gérer les services de sécurité — protection physique des systèmes</span></div>
           <div class="ref-item"><span class="ref-code code-cobit">BAI09</span><span class="ref-text" data-fr="Gérer les actifs IT — matériels et équipements physiques" data-en="Managed Assets — physical hardware and equipment">Gérer les actifs IT — matériels et équipements physiques</span></div>
+        </div></td>
+        <td class="col-euai"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-euai">Art. 13</span><span class="ref-text" data-fr="Information utilisateur sur les conditions d'usage" data-en="User information on intended conditions of use">Information utilisateur sur les conditions d'usage</span></div>
         </div></td>
       </tr>
       <tr data-domain="tech">
@@ -676,6 +705,9 @@
           <div class="ref-item"><span class="ref-code code-cobit">BAI10</span><span class="ref-text" data-fr="Gérer la configuration — baselines et CMDB" data-en="Managed Configuration — baselines and CMDB">Gérer la configuration — baselines et CMDB</span></div>
           <div class="ref-item"><span class="ref-code code-cobit">BAI06</span><span class="ref-text" data-fr="Gérer les changements IT — processus de change management" data-en="Managed IT Changes — change management process">Gérer les changements IT — processus de change management</span></div>
           <div class="ref-item"><span class="ref-code code-cobit">DSS05</span><span class="ref-text" data-fr="Gérer les services de sécurité — hardening et patch" data-en="Managed Security Services — hardening and patch management">Gérer les services de sécurité — hardening et patch</span></div>
+        </div></td>
+        <td class="col-euai"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-euai">Art. 15</span><span class="ref-text" data-fr="Exactitude, robustesse et cybersécurité des systèmes" data-en="Accuracy, robustness and cybersecurity of systems">Exactitude, robustesse et cybersécurité des systèmes</span></div>
         </div></td>
       </tr>
 
@@ -711,6 +743,9 @@
           <div class="ref-item"><span class="ref-code code-cobit">DSS05</span><span class="ref-text" data-fr="Gérer les services de sécurité — chiffrement et DLP" data-en="Managed Security Services — encryption and DLP">Gérer les services de sécurité — chiffrement et DLP</span></div>
           <div class="ref-item"><span class="ref-code code-cobit">MEA03</span><span class="ref-text" data-fr="Gérer la conformité — protection données RGPD" data-en="Managed Compliance — GDPR data protection">Gérer la conformité — protection données RGPD</span></div>
         </div></td>
+        <td class="col-euai"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-euai">Art. 10</span><span class="ref-text" data-fr="Qualité, pertinence et gouvernance des données" data-en="Data quality, relevance and governance">Qualité, pertinence et gouvernance des données</span></div>
+        </div></td>
       </tr>
 
       <!-- 09 SÉCURITÉ RÉSEAU -->
@@ -741,6 +776,9 @@
           <div class="ref-item"><span class="ref-code code-cobit">DSS05</span><span class="ref-text" data-fr="Gérer les services de sécurité — sécurité réseau et firewall" data-en="Managed Security Services — network security and firewall">Gérer les services de sécurité — sécurité réseau et firewall</span></div>
           <div class="ref-item"><span class="ref-code code-cobit">BAI04</span><span class="ref-text" data-fr="Gérer la disponibilité et la capacité réseau" data-en="Managed Availability and Capacity — network">Gérer la disponibilité et la capacité réseau</span></div>
           <div class="ref-item"><span class="ref-code code-cobit">APO03</span><span class="ref-text" data-fr="Gérer l'architecture — segmentation et Zero Trust" data-en="Managed Enterprise Architecture — segmentation and Zero Trust">Gérer l'architecture — segmentation et Zero Trust</span></div>
+        </div></td>
+        <td class="col-euai"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-euai">Art. 15</span><span class="ref-text" data-fr="Exigences de cybersécurité applicables aux IA à haut risque" data-en="Cybersecurity requirements for high-risk AI">Exigences de cybersécurité applicables aux IA à haut risque</span></div>
         </div></td>
       </tr>
 
@@ -777,6 +815,9 @@
           <div class="ref-item"><span class="ref-code code-cobit">BAI07</span><span class="ref-text" data-fr="Gérer l'acceptation du changement et la transition" data-en="Managed IT Change Acceptance and Transitioning">Gérer l'acceptation du changement et la transition</span></div>
           <div class="ref-item"><span class="ref-code code-cobit">APO13</span><span class="ref-text" data-fr="Gérer la sécurité — exigences sécurité dans les projets" data-en="Managed Security — security requirements in projects">Gérer la sécurité — exigences sécurité dans les projets</span></div>
         </div></td>
+        <td class="col-euai"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-euai">Art. 16</span><span class="ref-text" data-fr="Obligations des fournisseurs (développement et conformité)" data-en="Provider obligations (development and conformity)">Obligations des fournisseurs (développement et conformité)</span></div>
+        </div></td>
       </tr>
 
       <!-- 11 SURVEILLANCE & DÉTECTION -->
@@ -809,6 +850,9 @@
           <div class="ref-item"><span class="ref-code code-cobit">MEA01</span><span class="ref-text" data-fr="Gérer la surveillance et l'évaluation de la performance" data-en="Managed Performance and Conformance Monitoring">Gérer la surveillance et l'évaluation de la performance</span></div>
           <div class="ref-item"><span class="ref-code code-cobit">DSS04</span><span class="ref-text" data-fr="Gérer la continuité — surveillance des événements critiques" data-en="Managed Continuity — critical event monitoring">Gérer la continuité — surveillance des événements critiques</span></div>
           <div class="ref-item"><span class="ref-code code-cobit">DSS05</span><span class="ref-text" data-fr="Gérer les services de sécurité — SOC, SIEM, journaux" data-en="Managed Security Services — SOC, SIEM, logging">Gérer les services de sécurité — SOC, SIEM, journaux</span></div>
+        </div></td>
+        <td class="col-euai"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-euai">Art. 14</span><span class="ref-text" data-fr="Surveillance humaine et mécanismes de suivi opérationnel" data-en="Human oversight and operational monitoring mechanisms">Surveillance humaine et mécanismes de suivi opérationnel</span></div>
         </div></td>
       </tr>
 
@@ -846,6 +890,9 @@
           <div class="ref-item"><span class="ref-code code-cobit">DSS03</span><span class="ref-text" data-fr="Gérer les problèmes IT (analyse cause racine)" data-en="Managed Problems — root cause analysis">Gérer les problèmes IT (analyse cause racine)</span></div>
           <div class="ref-item"><span class="ref-code code-cobit">MEA02</span><span class="ref-text" data-fr="Gérer le système de contrôle interne — audit des incidents" data-en="Managed System of Internal Control — incident audit">Gérer le système de contrôle interne — audit des incidents</span></div>
         </div></td>
+        <td class="col-euai"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-euai">Art. 73</span><span class="ref-text" data-fr="Signalement des incidents graves aux autorités" data-en="Reporting serious incidents to authorities">Signalement des incidents graves aux autorités</span></div>
+        </div></td>
       </tr>
 
       <!-- 13 CONTINUITÉ & RÉSILIENCE -->
@@ -876,6 +923,9 @@
           <div class="ref-item"><span class="ref-code code-cobit">DSS04</span><span class="ref-text" data-fr="Gérer la continuité des services IT (BCP/DRP)" data-en="Managed Continuity — BCP/DRP">Gérer la continuité des services IT (BCP/DRP)</span></div>
           <div class="ref-item"><span class="ref-code code-cobit">BAI04</span><span class="ref-text" data-fr="Gérer la disponibilité et la capacité — RTO/RPO" data-en="Managed Availability and Capacity — RTO/RPO">Gérer la disponibilité et la capacité — RTO/RPO</span></div>
           <div class="ref-item"><span class="ref-code code-cobit">EDM03</span><span class="ref-text" data-fr="Assurer l'optimisation des risques — résilience opérationnelle" data-en="Ensure risk optimisation — operational resilience">Assurer l'optimisation des risques — résilience opérationnelle</span></div>
+        </div></td>
+        <td class="col-euai"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-euai">Art. 20</span><span class="ref-text" data-fr="Actions correctives et gestion des non-conformités" data-en="Corrective actions and non-conformity handling">Actions correctives et gestion des non-conformités</span></div>
         </div></td>
       </tr>
 
@@ -908,6 +958,9 @@
           <div class="ref-item"><span class="ref-code code-cobit">APO10</span><span class="ref-text" data-fr="Gérer les fournisseurs — sélection, contrats, TPRM" data-en="Managed Suppliers — selection, contracts, TPRM">Gérer les fournisseurs — sélection, contrats, TPRM</span></div>
           <div class="ref-item"><span class="ref-code code-cobit">APO09</span><span class="ref-text" data-fr="Gérer les accords de service — SLA et révision" data-en="Managed Service Agreements — SLAs and review">Gérer les accords de service — SLA et révision</span></div>
           <div class="ref-item"><span class="ref-code code-cobit">MEA03</span><span class="ref-text" data-fr="Gérer la conformité externe — obligations contractuelles" data-en="Managed Compliance — contractual obligations">Gérer la conformité externe — obligations contractuelles</span></div>
+        </div></td>
+        <td class="col-euai"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-euai">Art. 25</span><span class="ref-text" data-fr="Répartition des responsabilités dans la chaîne de valeur IA" data-en="Allocation of responsibilities in the AI value chain">Répartition des responsabilités dans la chaîne de valeur IA</span></div>
         </div></td>
       </tr>
 
@@ -943,6 +996,9 @@
           <div class="ref-item"><span class="ref-code code-cobit">MEA03</span><span class="ref-text" data-fr="Gérer la conformité externe — réglementaire et légale" data-en="Managed Compliance with External Requirements — regulatory and legal">Gérer la conformité externe — réglementaire et légale</span></div>
           <div class="ref-item"><span class="ref-code code-cobit">MEA04</span><span class="ref-text" data-fr="Gérer l'assurance — revue indépendante et maturité" data-en="Managed Assurance — independent review and maturity">Gérer l'assurance — revue indépendante et maturité</span></div>
         </div></td>
+        <td class="col-euai"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-euai">Art. 17 & 43</span><span class="ref-text" data-fr="SMQ, évaluation de conformité et amélioration continue" data-en="QMS, conformity assessment and continual improvement">SMQ, évaluation de conformité et amélioration continue</span></div>
+        </div></td>
       </tr>
       <tr data-domain="gov">
         <td><div class="domain-cell"><span class="domain-num">16</span><span class="domain-name" data-i18n="d_16_name">Sécurité RH &amp; gestion du personnel</span><span class="domain-tag tag-gov" data-i18n="f_gov">Gouvernance</span></div></td>
@@ -969,6 +1025,9 @@
         <td class="col-cobit"><div class="ref-list">
           <div class="ref-item"><span class="ref-code code-cobit">APO07</span><span class="ref-text" data-fr="Gérer les ressources humaines IT — rôles, recrutement, départ" data-en="Managed Human Resources — roles, hiring, departure">Gérer les ressources humaines IT — rôles, recrutement, départ</span></div>
           <div class="ref-item"><span class="ref-code code-cobit">APO01</span><span class="ref-text" data-fr="Gérer le cadre IT — responsabilités et comportements" data-en="Managed I&T Management Framework — responsibilities and behaviours">Gérer le cadre IT — responsabilités et comportements</span></div>
+        </div></td>
+        <td class="col-euai"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-euai">Art. 4</span><span class="ref-text" data-fr="Niveau de compétence approprié pour les équipes IA" data-en="Appropriate competence level for AI teams">Niveau de compétence approprié pour les équipes IA</span></div>
         </div></td>
       </tr>
       <tr data-domain="ia">
@@ -1001,10 +1060,13 @@
           <div class="ref-item"><span class="ref-code code-cobit">APO12</span><span class="ref-text" data-fr="Gérer les risques — risques éthiques et biais algorithmiques" data-en="Managed Risk — ethical risks and algorithmic bias">Gérer les risques — risques éthiques et biais algorithmiques</span></div>
           <div class="ref-item"><span class="ref-code code-cobit">MEA03</span><span class="ref-text" data-fr="Gérer la conformité — EU AI Act et obligations réglementaires" data-en="Managed Compliance — EU AI Act and regulatory obligations">Gérer la conformité — EU AI Act et obligations réglementaires</span></div>
         </div></td>
+        <td class="col-euai"><div class="ref-list">
+          <div class="ref-item"><span class="ref-code code-euai">Art. 5, 9, 14, 50</span><span class="ref-text" data-fr="Pratiques interdites, risque, supervision humaine et transparence" data-en="Prohibited practices, risk, human oversight and transparency">Pratiques interdites, risque, supervision humaine et transparence</span></div>
+        </div></td>
       </tr>
 
       <tr id="no-results-row">
-        <td colspan="7"><div class="no-results"><span data-i18n="no_results">// AUCUN RÉSULTAT POUR CE FILTRE</span></div></td>
+        <td colspan="8"><div class="no-results"><span data-i18n="no_results">// AUCUN RÉSULTAT POUR CE FILTRE</span></div></td>
       </tr>
 
     </tbody>
@@ -1018,7 +1080,7 @@
 </footer>
 
 <script>
-  const activeNorms = { nist: true, iso27: true, iso42: true, cis: true, itil: true, cobit: true };
+  const activeNorms = { nist: true, iso27: true, iso42: true, cis: true, itil: true, cobit: true, euai: true };
   let activeDomain = 'all';
 
   function toggleNorm(norm) {
@@ -1029,7 +1091,7 @@
   }
 
   function updateColumns() {
-    const norms = ['nist', 'iso27', 'iso42', 'cis', 'itil', 'cobit'];
+    const norms = ['nist', 'iso27', 'iso42', 'cis', 'itil', 'cobit', 'euai'];
     norms.forEach(norm => {
       const cells = document.querySelectorAll(`.col-${norm}`);
       cells.forEach(c => c.style.display = activeNorms[norm] ? '' : 'none');
@@ -1056,7 +1118,7 @@
   const i18n = {
     fr: {
       eyebrow: 'Cartographie des référentiels',
-      subtitle: 'Comme la pierre de Rosette permettait de déchiffrer trois langues en parallèle, Rosettable traduit et aligne 6 référentiels de sécurité sur 17 domaines — NIST CSF 2.0, ISO 27001, ISO 42001, CIS Controls v8, ITIL v4 &amp; COBIT 2019',
+      subtitle: 'Comme la pierre de Rosette permettait de déchiffrer trois langues en parallèle, Rosettable traduit et aligne 7 référentiels de sécurité sur 17 domaines — NIST CSF 2.0, ISO 27001, ISO 42001, CIS Controls v8, ITIL v4, COBIT 2019 &amp; EU AI Act',
       legend_hint: 'Cliquer pour masquer une norme',
       label_norms: 'Normes ·',
       label_domains: 'Domaines ·',
@@ -1089,7 +1151,7 @@
     },
     en: {
       eyebrow: 'Framework Mapping',
-      subtitle: 'Just as the Rosetta Stone decoded three scripts in parallel, Rosettable translates and aligns 6 security frameworks across 17 domains — NIST CSF 2.0, ISO 27001, ISO 42001, CIS Controls v8, ITIL v4 &amp; COBIT 2019',
+      subtitle: 'Just as the Rosetta Stone decoded three scripts in parallel, Rosettable translates and aligns 7 security frameworks across 17 domains — NIST CSF 2.0, ISO 27001, ISO 42001, CIS Controls v8, ITIL v4, COBIT 2019 &amp; EU AI Act',
       legend_hint: 'Click to hide a framework',
       label_norms: 'Frameworks ·',
       label_domains: 'Domains ·',

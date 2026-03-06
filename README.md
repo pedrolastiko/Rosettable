@@ -1,6 +1,6 @@
 # 🪨 Rosettable
 
-> *Just as the Rosetta Stone decoded three scripts in parallel, **Rosettable** translates and aligns 6 security frameworks across 17 domains.*
+> *Just as the Rosetta Stone decoded three scripts in parallel, **Rosettable** translates and aligns 7 security frameworks across 17 domains.*
 
 ---
 
@@ -28,6 +28,7 @@ The name is a deliberate play on words: **Rosetta** (the Stone that unlocked mul
 | **CIS Controls** | v8 | Technical cybersecurity controls (18 controls) |
 | **ITIL** | v4 | IT Service Management (SVS, practices) |
 | **COBIT** | 2019 | Governance and Management of Enterprise IT (EDM, APO, BAI, DSS, MEA) |
+| **EU AI Act** | 2024/1689 | European regulation for trustworthy AI (risk-based obligations, transparency, prohibited practices) |
 
 ---
 
@@ -85,7 +86,7 @@ Copy the `index.html` file localy or directly into your internal portal. No exte
 rosettable.html          ← single self-contained file
 │
 ├── CSS                  ← light theme + dark theme (CSS custom properties)
-├── HTML                 ← table structure, 17 rows × 6 framework columns
+├── HTML                 ← table structure, 17 rows × 7 framework columns
 └── JavaScript
     ├── toggleTheme()    ← light / dark mode switch
     ├── toggleLanguage() ← FR / EN switch (full i18n)
