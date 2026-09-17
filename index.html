@@ -426,8 +426,32 @@
   }
 
   .no-results { text-align: center; padding: 48px; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.1em; }
-  #no-results-row { display: none; }
-  #no-results-row.visible { display: table-row; }
+  .no-results-row { display: none; }
+  .no-results-row.visible { display: table-row; }
+
+  /* VIEWS (combined IT / Cyber / AI) */
+  .views { border-bottom: 1px solid var(--border); }
+  .view-note { font-size: 10px; letter-spacing: 0.06em; margin-left: 8px; }
+  #groupTable { width: max(100%, 760px); }
+  #groupTable thead th:not(:first-child) { width: auto; }
+  #groupTable thead th.col-group { color: var(--text); }
+  .group-cell { padding: 12px 14px; }
+  .subdomain { margin-bottom: 12px; }
+  .subdomain:last-of-type { margin-bottom: 0; }
+  .subdomain-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--domain-name);
+    margin-bottom: 5px;
+    padding-bottom: 3px;
+    border-bottom: 1px dashed var(--border);
+    transition: color 0.25s;
+  }
+  .subdomain .ref-list { gap: 3px; }
+  .ref-origin { color: var(--muted); font-size: 10px; font-family: 'DM Mono', monospace; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+  .group-empty { margin-top: 10px; }
+  [hidden] { display: none !important; }
 
   .site-footer {
     border-top: 1px solid var(--border);
@@ -486,6 +510,17 @@
     <span class="badge euai" onclick="toggleNorm('euai')"><span class="dot"></span>EU AI Act</span>
     <span class="sep"></span>
     <span class="filter-label" style="font-size:10px;color:#475569" data-i18n="legend_hint">Cliquer pour masquer une norme</span>
+  </div>
+</div>
+
+<div class="filters views">
+  <div class="filters-inner">
+    <span class="filter-label" data-i18n="label_views">Vue ·</span>
+    <button class="filter-btn view-btn active" onclick="setView('matrix', this)" data-i18n="v_matrix">Matrice</button>
+    <button class="filter-btn view-btn" onclick="setView('it', this)">IT</button>
+    <button class="filter-btn view-btn" onclick="setView('cyber', this)">Cyber</button>
+    <button class="filter-btn view-btn" onclick="setView('ia', this)" data-i18n="v_ia">IA</button>
+    <span class="filter-label view-note" id="viewNote" data-i18n="view_note" hidden>Regroupement en sous-domaines proposé par Rosettable</span>
   </div>
 </div>
 
@@ -1274,11 +1309,22 @@
         </div></td>
       </tr>
 
-      <tr id="no-results-row">
+      <tr class="no-results-row">
         <td colspan="10"><div class="no-results"><span data-i18n="no_results">// AUCUN RÉSULTAT POUR CE FILTRE</span></div></td>
       </tr>
 
     </tbody>
+  </table>
+  </div>
+  <div class="table-inner" id="groupWrap" hidden>
+  <table id="groupTable">
+    <thead>
+      <tr>
+        <th data-i18n="th_domain">Domaine</th>
+        <th class="col-group" id="groupTh"></th>
+      </tr>
+    </thead>
+    <tbody id="groupBody"></tbody>
   </table>
   </div>
 </div>
@@ -1300,26 +1346,35 @@
   }
 
   function updateColumns() {
-    const norms = ['nist', 'iso27', 'iso42', 'nairmf', 'cyberai', 'cis', 'itil', 'cobit', 'euai'];
+    const norms = Object.keys(activeNorms);
     norms.forEach(norm => {
       const cells = document.querySelectorAll(`.col-${norm}`);
       cells.forEach(c => c.style.display = activeNorms[norm] ? '' : 'none');
+    });
+    // Combined views: hide sub-domains whose every criterion belongs to a hidden framework
+    document.querySelectorAll('.subdomain').forEach(sd => {
+      const items = [...sd.querySelectorAll('.ref-item')];
+      sd.hidden = items.length > 0 && items.every(i => i.style.display === 'none');
     });
   }
 
   function filterDomain(domain, btn) {
     activeDomain = domain;
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+    document.querySelectorAll('.filters:not(.views) .filter-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
     const rows = document.querySelectorAll('tbody tr[data-domain]');
-    let visible = 0;
     rows.forEach(row => {
       const show = domain === 'all' || row.dataset.domain === domain;
       row.classList.toggle('hidden', !show);
-      if (show) visible++;
     });
-    const noResults = document.getElementById('no-results-row');
-    noResults.classList.toggle('visible', visible === 0);
+    const perTable = new Map();
+    rows.forEach(row => {
+      const tb = row.parentElement;
+      perTable.set(tb, (perTable.get(tb) || 0) + (row.classList.contains('hidden') ? 0 : 1));
+    });
+    document.querySelectorAll('.no-results-row').forEach(nr => {
+      nr.classList.toggle('visible', (perTable.get(nr.parentElement) || 0) === 0);
+    });
   }
 
 
@@ -1332,6 +1387,12 @@
       label_norms: 'Normes ·',
       legend_group_it: 'IT', legend_group_cyber: 'Cyber', legend_group_ai: 'IA',
       label_domains: 'Domaines ·',
+      label_views: 'Vue ·', v_matrix: 'Matrice', v_ia: 'IA',
+      view_note: 'Regroupement en sous-domaines proposé par Rosettable',
+      th_group_it: 'Vue combinée IT — ITIL v4 · COBIT 2019',
+      th_group_cyber: 'Vue combinée Cyber — NIST CSF 2.0 · ISO 27001:2022 · CIS Controls v8',
+      th_group_ia: 'Vue combinée IA — ISO 42001:2023 · NIST AI RMF 1.0 · NIST IR 8596 Cyber AI Profile · EU AI Act',
+      not_covered: 'Non couvert :',
       f_all: 'Tous', f_gov: 'Gouvernance', f_risk: 'Risque',
       f_ops: 'Opérations', f_tech: 'Technique', f_cyber: 'Cyber Ops', f_ia: 'IA',
       stat_domains: 'Domaines', stat_norms: 'Normes',
@@ -1366,6 +1427,12 @@
       label_norms: 'Frameworks ·',
       legend_group_it: 'IT', legend_group_cyber: 'Cyber', legend_group_ai: 'AI',
       label_domains: 'Domains ·',
+      label_views: 'View ·', v_matrix: 'Matrix', v_ia: 'AI',
+      view_note: 'Sub-domain grouping proposed by Rosettable',
+      th_group_it: 'Combined IT view — ITIL v4 · COBIT 2019',
+      th_group_cyber: 'Combined Cyber view — NIST CSF 2.0 · ISO 27001:2022 · CIS Controls v8',
+      th_group_ia: 'Combined AI view — ISO 42001:2023 · NIST AI RMF 1.0 · NIST IR 8596 Cyber AI Profile · EU AI Act',
+      not_covered: 'Not covered:',
       f_all: 'All', f_gov: 'Governance', f_risk: 'Risk',
       f_ops: 'Operations', f_tech: 'Technical', f_cyber: 'Cyber Ops', f_ia: 'AI',
       stat_domains: 'Domains', stat_norms: 'Frameworks',
@@ -1422,6 +1489,286 @@
     document.body.classList.toggle('dark', isDark);
     document.getElementById('themeIcon').textContent = isDark ? '☀️' : '🌙';
     document.getElementById('themeLabel').textContent = isDark ? 'Mode clair' : 'Mode sombre';
+  }
+
+  // ─── Combined views (IT / Cyber / AI) ──────────────────────
+  // Each view groups the criteria of one framework family into sub-domains.
+  // Criteria are referenced by [framework, code]; labels are read from the matrix cells,
+  // so the text stays single-sourced. Repeating a code picks the next occurrence in the cell.
+  const VIEW_NORMS = {
+    it:    ['itil', 'cobit'],
+    cyber: ['nist', 'iso27', 'cis'],
+    ia:    ['iso42', 'nairmf', 'cyberai', 'euai'],
+  };
+  const NORM_LABELS = {
+    nist: 'NIST CSF 2.0', iso27: 'ISO 27001:2022', iso42: 'ISO 42001:2023', cis: 'CIS Controls v8',
+    itil: 'ITIL v4', cobit: 'COBIT 2019', nairmf: 'NIST AI RMF 1.0', cyberai: 'NIST IR 8596', euai: 'EU AI Act',
+  };
+  const SD = (fr, en, ...refs) => ({ fr, en, refs });
+  const VIEWS = {
+    it: [
+      /* 01 */ [SD('Cadre de gouvernance et direction', 'Governance framework and direction', ['cobit','EDM01'], ['itil','Gouvernance']),
+                SD('Alignement stratégique et valeur', 'Strategic alignment and value', ['itil','Stratégie'], ['cobit','EDM02']),
+                SD('Cadre de management et politiques', 'Management framework and policies', ['cobit','APO01'], ['cobit','APO13']),
+                SD('Revue et amélioration des politiques', 'Policy review and improvement', ['itil','Amélioration'])],
+      /* 02 */ [SD('Gouvernance et optimisation du risque', 'Risk governance and optimisation', ['cobit','EDM03'], ['itil','Relation']),
+                SD('Gestion opérationnelle des risques IT', 'Operational IT risk management', ['cobit','APO12'], ['itil','Risk Mgmt']),
+                SD('Qualité et amélioration', 'Quality and improvement', ['cobit','APO11'])],
+      /* 03 */ [SD('Inventaire et référentiel de configuration', 'Inventory and configuration repository', ['itil','ITAM'], ['itil','SACM'], ['cobit','BAI09']),
+                SD('Architecture et classification', 'Architecture and classification', ['cobit','APO03'], ['cobit','APO04']),
+                SD('Valorisation financière des actifs', 'Financial valuation of assets', ['itil','Fin.'])],
+      /* 04 */ [SD("Politique et services de sécurité d'accès", 'Access security policy and services', ['cobit','APO13'], ['cobit','DSS05'], ['itil','SecInfo']),
+                SD('Provisioning et gestion des comptes', 'Provisioning and account management', ['itil','SRM'], ['itil','SACM'], ['cobit','BAI10'])],
+      /* 05 */ [SD('Compétences et talents', 'Skills and talent', ['itil','WTM'], ['cobit','APO07']),
+                SD('Culture et comportements', 'Culture and behaviours', ['itil','OCM'], ['cobit','APO01'], ['cobit','DSS05']),
+                SD('Gestion des connaissances', 'Knowledge management', ['itil','KM'])],
+      /* 06 */ [SD('Sécurité des infrastructures et datacentres', 'Infrastructure and data centre security', ['itil','Infra'], ['cobit','DSS05']),
+                SD('Gestion du matériel physique', 'Physical hardware management', ['itil','ITAM'], ['cobit','BAI09'])],
+      /* 07 */ [SD('Gestion de la configuration', 'Configuration management', ['itil','SACM'], ['cobit','BAI10']),
+                SD('Changements et déploiements', 'Changes and deployments', ['itil','Change'], ['cobit','BAI06'], ['itil','Release']),
+                SD('Services de sécurité (hardening, patch)', 'Security services (hardening, patching)', ['cobit','DSS05'])],
+      /* 08 */ [SD('Gouvernance des données', 'Data governance', ['cobit','APO14'], ['itil','SACM']),
+                SD('Classification et chiffrement', 'Classification and encryption', ['itil','SecInfo'], ['cobit','DSS05']),
+                SD('Conformité et protection des données personnelles', 'Compliance and personal data protection', ['cobit','MEA03'])],
+      /* 09 */ [SD('Architecture et infrastructure réseau', 'Network architecture and infrastructure', ['cobit','APO03'], ['itil','Infra']),
+                SD('Disponibilité et capacité', 'Availability and capacity', ['itil','Avail.'], ['itil','Capa.'], ['cobit','BAI04']),
+                SD('Services de sécurité réseau', 'Network security services', ['cobit','DSS05'])],
+      /* 10 */ [SD('Développement et construction des solutions', 'Solution development and build', ['itil','SDM'], ['cobit','BAI03'], ['cobit','APO13']),
+                SD('Validation et tests', 'Validation and testing', ['itil','SVT']),
+                SD('Changement et déploiement', 'Change and deployment', ['itil','Change'], ['itil','Deploy'], ['cobit','BAI07'])],
+      /* 11 */ [SD('Supervision et gestion des événements', 'Monitoring and event management', ['itil','MEM'], ['cobit','MEA01']),
+                SD('Services de sécurité et continuité', 'Security services and continuity', ['cobit','DSS05'], ['cobit','DSS04']),
+                SD('Reporting et veille', 'Reporting and threat watch', ['itil','M&R'], ['itil','SecInfo'])],
+      /* 12 */ [SD('Gestion des incidents et point de contact', 'Incident management and point of contact', ['itil','IM'], ['itil','Service Desk'], ['cobit','DSS02']),
+                SD("Détection et corrélation d'événements", 'Event detection and correlation', ['itil','MEM']),
+                SD('Gestion des problèmes et causes racines', 'Problem management and root causes', ['itil','PM'], ['cobit','DSS03']),
+                SD('Contrôle interne et audit des incidents', 'Internal control and incident audit', ['cobit','MEA02'])],
+      /* 13 */ [SD('Continuité des services IT', 'IT service continuity', ['itil','ITSCM'], ['cobit','DSS04']),
+                SD('Disponibilité et capacité', 'Availability and capacity', ['itil','Avail.'], ['itil','Capa.'], ['cobit','BAI04']),
+                SD('Gouvernance de la résilience', 'Resilience governance', ['cobit','EDM03'])],
+      /* 14 */ [SD('Sélection et contrats fournisseurs', 'Supplier selection and contracts', ['cobit','APO10'], ['itil','Supplier']),
+                SD('Accords de service et suivi', 'Service agreements and monitoring', ['cobit','APO09'], ['itil','SLM']),
+                SD('Relation partenaires et conformité', 'Partner relationship and compliance', ['itil','Relation'], ['cobit','MEA03'])],
+      /* 15 */ [SD('Mesure et surveillance de la performance', 'Performance measurement and monitoring', ['itil','M&R'], ['cobit','MEA01']),
+                SD('Contrôle interne, audit et assurance', 'Internal control, audit and assurance', ['itil','Audit'], ['cobit','MEA02'], ['cobit','MEA04']),
+                SD('Conformité externe', 'External compliance', ['cobit','MEA03']),
+                SD('Amélioration continue', 'Continual improvement', ['itil','CI'])],
+      /* 16 */ [SD('Cycle de vie RH (arrivée, mobilité, départ)', 'HR lifecycle (onboarding, mobility, departure)', ['itil','WTM'], ['cobit','APO07']),
+                SD('Responsabilités et culture', 'Responsibilities and culture', ['cobit','APO01'], ['itil','OCM'])],
+      /* 17 */ [SD('Stratégie et innovation IA', 'AI strategy and innovation', ['itil','Stratégie'], ['cobit','APO04']),
+                SD('Gouvernance et risques IA', 'AI governance and risk', ['cobit','EDM01'], ['itil','Risk'], ['cobit','APO12']),
+                SD('Conformité et amélioration continue', 'Compliance and continual improvement', ['cobit','MEA03'], ['itil','CI'])],
+    ],
+    cyber: [
+      /* 01 */ [SD('Contexte organisationnel et obligations', 'Organizational context and obligations', ['nist','GV.OC'], ['iso27','§4–6']),
+                SD('Stratégie de risque et politiques', 'Risk strategy and policies', ['nist','GV.RM'], ['nist','GV.PO'], ['iso27','A.5.1']),
+                SD('Responsabilités et supervision', 'Responsibilities and oversight', ['iso27','A.5.4'], ['nist','GV.OV'], ['iso27','A.5.35'])],
+      /* 02 */ [SD('Stratégie et appétit au risque', 'Risk strategy and appetite', ['nist','GV.RM']),
+                SD('Appréciation des risques', 'Risk assessment', ['nist','ID.RA'], ['iso27','§6.1']),
+                SD("Traitement des risques et déclaration d'applicabilité", 'Risk treatment and Statement of Applicability', ['iso27','§8.2'], ['iso27','§6.2']),
+                SD('Amélioration continue', 'Continual improvement', ['nist','ID.IM'])],
+      /* 03 */ [SD('Inventaire des actifs matériels', 'Hardware asset inventory', ['nist','ID.AM-1'], ['cis','CIS 1']),
+                SD('Inventaire des logiciels et services', 'Software and service inventory', ['nist','ID.AM-2'], ['cis','CIS 2']),
+                SD("Inventaire de l'information, classification et criticité", 'Information inventory, classification and criticality', ['iso27','A.5.9'], ['iso27','A.5.12'], ['nist','ID.AM-5']),
+                SD('Utilisation acceptable et restitution', 'Acceptable use and return of assets', ['iso27','A.5.10'], ['iso27','A.5.11'])],
+      /* 04 */ [SD("Politique d'accès et gestion des identités", 'Access policy and identity management', ['iso27','A.5.15'], ['iso27','A.5.16'], ['nist','PR.AA-1'], ['cis','CIS 5']),
+                SD('Authentification', 'Authentication', ['nist','PR.AA-2'], ['iso27','A.5.17']),
+                SD("Droits d'accès et privilèges", 'Access rights and privileges', ['iso27','A.5.18'], ['nist','PR.AA-3'], ['iso27','A.8.2'], ['cis','CIS 6']),
+                SD('Revue périodique des droits', 'Periodic access review', ['nist','PR.AA-5'])],
+      /* 05 */ [SD('Sensibilisation de tous les utilisateurs', 'Awareness for all users', ['nist','PR.AT-1'], ['iso27','A.6.3'], ['iso27','§7.3'], ['cis','CIS 14']),
+                SD('Compétences et formation spécialisée', 'Competence and specialised training', ['nist','PR.AT-2'], ['iso27','§7.2'])],
+      /* 06 */ [SD('Périmètres et contrôle d\'accès physique', 'Perimeters and physical access control', ['iso27','A.7.1'], ['iso27','A.7.2'], ['nist','PR.AA-4']),
+                SD('Protection des équipements et mise au rebut', 'Equipment protection and disposal', ['nist','PR.PS-3'], ['iso27','A.7.8'], ['iso27','A.7.14']),
+                SD('Services support', 'Supporting utilities', ['iso27','A.7.11'])],
+      /* 07 */ [SD('Configuration sécurisée', 'Secure configuration', ['nist','PR.PS-1'], ['iso27','A.8.9'], ['cis','CIS 4']),
+                SD('Vulnérabilités et correctifs', 'Vulnerabilities and patching', ['nist','PR.PS-2'], ['iso27','A.8.8'], ['cis','CIS 7']),
+                SD('Protection contre les malwares et outils privilégiés', 'Malware protection and privileged utilities', ['iso27','A.8.7'], ['cis','CIS 10'], ['iso27','A.8.18']),
+                SD('Journalisation', 'Logging', ['nist','PR.PS-4'])],
+      /* 08 */ [SD('Chiffrement et protection au repos / en transit', 'Encryption and at-rest / in-transit protection', ['nist','PR.DS-1'], ['nist','PR.DS-2'], ['iso27','A.8.24'], ['cis','CIS 3']),
+                SD('Prévention des fuites et protection des enregistrements', 'Leakage prevention and protection of records', ['nist','PR.DS-5'], ['iso27','A.5.33']),
+                SD('Vie privée et données personnelles', 'Privacy and personal data', ['iso27','A.5.34']),
+                SD('Sauvegarde et développement sécurisé', 'Backup and secure development', ['cis','CIS 11'], ['iso27','A.8.25'])],
+      /* 09 */ [SD('Sécurité et ségrégation des réseaux', 'Network security and segregation', ['nist','PR.PS-5'], ['iso27','A.8.20'], ['iso27','A.8.22'], ['cis','CIS 12']),
+                SD('Services réseau, messagerie et navigation', 'Network services, email and web', ['iso27','A.8.21'], ['cis','CIS 9']),
+                SD('Résilience réseau', 'Network resilience', ['nist','PR.IR-1']),
+                SD('Surveillance et défense réseau', 'Network monitoring and defense', ['nist','DE.CM-1'], ['cis','CIS 13'])],
+      /* 10 */ [SD('Cycle de vie et exigences de sécurité', 'Lifecycle and security requirements', ['nist','PR.PS-6'], ['iso27','A.8.25'], ['iso27','A.8.26']),
+                SD('Architecture et codage sécurisés', 'Secure architecture and coding', ['iso27','A.8.27'], ['iso27','A.8.28'], ['cis','CIS 16']),
+                SD('Tests de sécurité', 'Security testing', ['iso27','A.8.29'], ['cis','CIS 18']),
+                SD('Composants tiers', 'Third-party components', ['nist','ID.RA-7'])],
+      /* 11 */ [SD('Journalisation', 'Logging', ['iso27','A.8.15'], ['cis','CIS 8']),
+                SD('Surveillance continue', 'Continuous monitoring', ['nist','DE.CM'], ['iso27','A.8.16'], ['cis','CIS 13']),
+                SD('Analyse des événements', 'Event analysis', ['nist','DE.AE']),
+                SD('Renseignement sur les menaces', 'Threat intelligence', ['nist','ID.RA-2'], ['iso27','A.5.7'])],
+      /* 12 */ [SD('Préparation et planification', 'Preparation and planning', ['iso27','A.5.24'], ['cis','CIS 17']),
+                SD('Gestion et coordination des incidents', 'Incident management and coordination', ['nist','RS.MA'], ['iso27','A.5.25'], ['iso27','A.5.26']),
+                SD('Analyse et collecte des preuves', 'Analysis and evidence collection', ['nist','RS.AN'], ['iso27','A.5.28']),
+                SD('Mitigation et confinement', 'Mitigation and containment', ['nist','RS.MI']),
+                SD("Communication et retour d'expérience", 'Communication and lessons learned', ['nist','RS.CO'], ['iso27','A.5.27'])],
+      /* 13 */ [SD('Résilience et préparation à la continuité', 'Resilience and continuity readiness', ['nist','PR.IR'], ['iso27','A.5.29'], ['iso27','A.5.30']),
+                SD('Sauvegarde et récupération des données', 'Backup and data recovery', ['iso27','A.8.13'], ['cis','CIS 11']),
+                SD('Exécution du plan de reprise', 'Recovery plan execution', ['nist','RC.RP']),
+                SD('Communication post-reprise', 'Post-recovery communication', ['nist','RC.CO'])],
+      /* 14 */ [SD("Programme de gestion de la chaîne d'approvisionnement", 'Supply chain risk management program', ['nist','GV.SC'], ['iso27','A.5.19'], ['iso27','A.5.21']),
+                SD('Évaluation des risques tiers', 'Third-party risk assessment', ['nist','ID.RA-9']),
+                SD('Accords fournisseurs', 'Supplier agreements', ['iso27','A.5.20']),
+                SD('Surveillance et revue des prestataires', 'Monitoring and review of service providers', ['iso27','A.5.22'], ['cis','CIS 15'])],
+      /* 15 */ [SD('Supervision et revue de direction', 'Oversight and management review', ['nist','GV.OV'], ['iso27','§9.3']),
+                SD('Mesure et audit interne', 'Measurement and internal audit', ['iso27','§9.1'], ['iso27','§9.2']),
+                SD('Conformité aux politiques et procédures', 'Compliance with policies and procedures', ['iso27','A.5.36'], ['iso27','A.5.37']),
+                SD('Amélioration continue', 'Continual improvement', ['nist','ID.IM'], ['iso27','§10'])],
+      /* 16 */ [SD('Rôles et responsabilités', 'Roles and responsibilities', ['nist','GV.RR']),
+                SD("Avant et pendant l'emploi", 'Prior to and during employment', ['iso27','A.6.1'], ['iso27','A.6.2'], ['iso27','A.6.4']),
+                SD('Fin ou changement de contrat', 'Termination or change of employment', ['iso27','A.6.5']),
+                SD('Sensibilisation et signalement', 'Awareness and reporting', ['nist','PR.AT'], ['iso27','A.6.8'])],
+      /* 17 */ [SD('Contexte et risques liés à l\'IA', 'AI context and risks', ['nist','GV.OC'], ['nist','ID.RA']),
+                SD('Détection des menaces liées à l\'IA', 'Detection of AI-related threats', ['iso27','A.5.7'], ['iso27','A.8.16'])],
+    ],
+    ia: [
+      /* 01 */ [SD('Contexte, mission et leadership IA', 'AI context, mission and leadership', ['iso42','§4–6'], ['cyberai','GV.OC-01'], ['euai','Art. 4 & 26']),
+                SD('Politiques et culture de gouvernance IA', 'AI governance policies and culture', ['iso42','A.2.2'], ['nairmf','GV.1'], ['cyberai','GV.PO-01']),
+                SD('Rôles et supervision', 'Roles and oversight', ['iso42','A.6.1'], ['cyberai','GV.OV-01'], ['cyberai','GV.RM-07'])],
+      /* 02 */ [SD('Cadre et gouvernance du risque IA', 'AI risk framework and governance', ['iso42','§6.1'], ['cyberai','GV.RM-01'], ['euai','Art. 9']),
+                SD("Contexte, finalité et évaluation d'impact", 'Context, purpose and impact assessment', ['nairmf','MAP 1.3'], ['iso42','A.4.2']),
+                SD("Menaces et vulnérabilités propres à l'IA", 'AI-specific threats and vulnerabilities', ['cyberai','ID.RA-01'], ['cyberai','ID.RA-03']),
+                SD('Appétit au risque et traitement', 'Risk appetite and treatment', ['cyberai','GV.RM-04'], ['iso42','A.8.4'])],
+      /* 03 */ [SD('Inventaire des systèmes et composants IA', 'Inventory of AI systems and components', ['iso42','A.8.1'], ['nairmf','MAP 2.2'], ['cyberai','ID.AM-01'], ['cyberai','ID.AM-02']),
+                SD('Inventaire des données et métadonnées', 'Data and metadata inventory', ['cyberai','ID.AM-07']),
+                SD('Criticité, cycle de vie et documentation', 'Criticality, lifecycle and documentation', ['cyberai','ID.AM-05'], ['iso42','A.8.3'], ['euai','Art. 11'])],
+      /* 04 */ [SD('Identités et rôles des acteurs IA', 'Identities and roles of AI actors', ['nairmf','GOVERN 4.2'], ['cyberai','PR.AA-01']),
+                SD("Contrôle d'accès et moindre privilège", 'Access control and least privilege', ['iso42','A.7.4'], ['cyberai','PR.AA-05']),
+                SD('Authentification et détection des usurpations', 'Authentication and impersonation detection', ['cyberai','PR.AA-03'], ['cyberai','DE.CM-03']),
+                SD("Accès aux données d'entraînement", 'Access to training data', ['iso42','A.9.4'], ['euai','Art. 10'])],
+      /* 05 */ [SD('Compétences et maîtrise de l\'IA', 'AI competence and literacy', ['iso42','§7.2'], ['nairmf','GOVERN 3.3'], ['euai','Art. 4']),
+                SD('Formation éthique et responsable', 'Ethical and responsible AI training', ['iso42','A.6.2'], ['iso42','A.6.4']),
+                SD("Sensibilisation aux risques cyber de l'IA", 'Awareness of AI cyber risks', ['cyberai','PR.AT-01'], ['cyberai','PR.AT-01']),
+                SD('Formation spécialisée sécurité IA', 'Specialised AI security training', ['cyberai','PR.AT-02'], ['cyberai','PR.AT-02'])],
+      /* 06 */ [SD('Sécurité physique des infrastructures IA', 'Physical security of AI infrastructure', ['iso42','A.7.5'], ['nairmf','MANAGE 2.3'], ['cyberai','PR.IR-02']),
+                SD('Contrôle des accès physiques', 'Physical access control', ['cyberai','PR.AA-06']),
+                SD("Conditions d'usage", 'Conditions of use', ['euai','Art. 13'])],
+      /* 07 */ [SD('Configuration des modèles et plateformes', 'Model and platform configuration', ['cyberai','PR.PS-01'], ['nairmf','MANAGE 1.4']),
+                SD('Maintenance et logiciels autorisés', 'Maintenance and authorised software', ['cyberai','PR.PS-02'], ['cyberai','PR.PS-05']),
+                SD('Journalisation et robustesse', 'Logging and robustness', ['cyberai','PR.PS-04'], ['euai','Art. 15'])],
+      /* 08 */ [SD('Gouvernance et qualité des données', 'Data governance and quality', ['iso42','A.9.1'], ['iso42','A.9.2'], ['nairmf','MAP 2.3'], ['euai','Art. 10']),
+                SD('Protection des données et des modèles', 'Protection of data and models', ['cyberai','PR.DS-01'], ['cyberai','PR.DS-02'], ['cyberai','PR.DS-10']),
+                SD('Données personnelles', 'Personal data', ['iso42','A.9.5']),
+                SD('Sauvegardes', 'Backups', ['cyberai','PR.DS-11'])],
+      /* 09 */ [SD('Segmentation et résilience des environnements IA', 'Segmentation and resilience of AI environments', ['cyberai','PR.IR-01'], ['cyberai','PR.IR-03'], ['nairmf','MANAGE 4.1'], ['euai','Art. 15']),
+                SD('Détection réseau assistée par IA', 'AI-assisted network detection', ['cyberai','DE.CM-01'], ['cyberai','DE.CM-01'])],
+      /* 10 */ [SD('Développement sécurisé des systèmes IA', 'Secure development of AI systems', ['cyberai','PR.PS-06'], ['euai','Art. 16']),
+                SD('Tests et validation des modèles', 'Model testing and validation', ['iso42','A.10.1'], ['iso42','A.10.2'], ['nairmf','MEASURE 2.7']),
+                SD('Vulnérabilités des composants IA', 'AI component vulnerabilities', ['cyberai','ID.RA-01'], ['cyberai','ID.RA-08']),
+                SD("L'IA au service du développement sécurisé", 'AI in support of secure development', ['cyberai','PR.PS-06'])],
+      /* 11 */ [SD('Surveillance des systèmes IA', 'Monitoring of AI systems', ['iso42','A.10.3'], ['nairmf','MEASURE 2.4'], ['cyberai','DE.CM-09'], ['cyberai','DE.CM-06']),
+                SD('Journalisation et supervision humaine', 'Logging and human oversight', ['iso42','A.7.6'], ['euai','Art. 14']),
+                SD("L'IA au service de la détection", 'AI in support of detection', ['cyberai','DE.AE-02'], ['cyberai','DE.AE-07'])],
+      /* 12 */ [SD('Préparation et procédures d\'incident IA', 'AI incident preparation and procedures', ['iso42','A.10.4'], ['nairmf','MANAGE 3.2'], ['cyberai','RS.MA-01']),
+                SD('Analyse et confinement', 'Analysis and containment', ['cyberai','RS.AN-03'], ['cyberai','RS.MI-01']),
+                SD('Signalement des incidents', 'Incident reporting', ['iso42','A.5.3'], ['euai','Art. 73']),
+                SD("L'IA au service de la réponse", 'AI in support of response', ['cyberai','RS.MA-02'])],
+      /* 13 */ [SD('Continuité des systèmes IA', 'AI system continuity', ['iso42','A.8.5'], ['nairmf','MANAGE 4.2'], ['cyberai','PR.IR-04']),
+                SD('Restauration et intégrité', 'Restoration and integrity', ['cyberai','RC.RP-01'], ['cyberai','RC.RP-03']),
+                SD('Communication et actions correctives', 'Communication and corrective actions', ['cyberai','RC.CO-04'], ['euai','Art. 20'])],
+      /* 14 */ [SD("Gouvernance de la chaîne d'approvisionnement IA", 'AI supply chain governance', ['cyberai','GV.SC-01'], ['nairmf','GOVERN 2.3'], ['euai','Art. 25']),
+                SD('Connaissance des fournisseurs et due diligence', 'Supplier knowledge and due diligence', ['cyberai','GV.SC-04'], ['iso42','A.8.6'], ['cyberai','GV.SC-06']),
+                SD('Transparence et cycle de vie', 'Transparency and lifecycle', ['iso42','A.5.5'], ['cyberai','GV.SC-09'])],
+      /* 15 */ [SD('Supervision et revue de la stratégie', 'Oversight and strategy review', ['cyberai','GV.OV-02'], ['cyberai','GV.OV-03']),
+                SD('Mesure, audit et traçabilité', 'Measurement, audit and traceability', ['iso42','§9.1'], ['iso42','§9.2'], ['nairmf','GOVERN 6.1']),
+                SD('Conformité réglementaire', 'Regulatory compliance', ['iso42','A.5.6'], ['euai','Art. 17 & 43']),
+                SD('Amélioration continue', 'Continual improvement', ['cyberai','ID.IM-01'], ['cyberai','ID.IM-03'])],
+      /* 16 */ [SD('Responsabilité et direction', 'Accountability and leadership', ['cyberai','GV.RR-01'], ['cyberai','GV.RR-02'], ['iso42','A.6.3']),
+                SD('Compétences et pratiques RH', 'Skills and HR practices', ['nairmf','GOVERN 3.2'], ['cyberai','GV.RR-04'], ['euai','Art. 4']),
+                SD("Éthique et usage des outils IA", 'Ethics and use of AI tools', ['iso42','A.6.5'], ['cyberai','DE.CM-03'])],
+      /* 17 */ [SD('Politique et principes de confiance', 'Policy and trustworthiness principles', ['iso42','A.2'], ['iso42','A.3'], ['nairmf','GOVERN 1.6'], ['euai','Art. 5, 9, 14, 50']),
+                SD('Objectifs, rôles et compétences', 'Objectives, roles and competencies', ['iso42','A.5'], ['iso42','A.6']),
+                SD("Évaluation d'impact et risques", 'Impact assessment and risks', ['iso42','A.4'], ['cyberai','GV.OC-03'], ['cyberai','GV.RM-03']),
+                SD('Surveillance post-déploiement', 'Post-deployment monitoring', ['iso42','A.11']),
+                SD('Cadre du Cyber AI Profile', 'Cyber AI Profile framework', ['cyberai','Axes'], ['cyberai','P1–P3'])],
+    ],
+  };
+
+  let activeView = 'matrix';
+
+  function codeOf(item) {
+    const c = item.querySelector('.ref-code');
+    return c.dataset.i18n ? i18n.fr[c.dataset.i18n] : c.textContent.trim();
+  }
+
+  function buildGroupView(view) {
+    const body = document.getElementById('groupBody');
+    body.innerHTML = '';
+    const rows = document.querySelectorAll('#mainTable tbody tr[data-domain]');
+    rows.forEach((row, di) => {
+      const tr = document.createElement('tr');
+      tr.dataset.domain = row.dataset.domain;
+      tr.classList.toggle('hidden', row.classList.contains('hidden'));
+      tr.appendChild(row.firstElementChild.cloneNode(true));
+      const td = document.createElement('td');
+      td.className = 'group-cell';
+      const used = new Map(); // norm -> Set of consumed item indexes
+      const groups = VIEWS[view][di] || [];
+      groups.forEach(g => {
+        const box = document.createElement('div');
+        box.className = 'subdomain';
+        const title = document.createElement('div');
+        title.className = 'subdomain-title';
+        title.dataset.fr = g.fr; title.dataset.en = g.en; title.textContent = g.fr;
+        box.appendChild(title);
+        const list = document.createElement('div');
+        list.className = 'ref-list';
+        g.refs.forEach(([norm, code]) => {
+          const cell = row.querySelector(`td.col-${norm}`);
+          const items = cell ? [...cell.querySelectorAll('.ref-item')] : [];
+          const consumed = used.get(norm) || new Set();
+          const idx = items.findIndex((it, i) => !consumed.has(i) && codeOf(it) === code);
+          if (idx === -1) { console.warn(`[views] ${view} d${di + 1}: ${norm} ${code} not found`); return; }
+          consumed.add(idx); used.set(norm, consumed);
+          const clone = items[idx].cloneNode(true);
+          clone.classList.add(`col-${norm}`);
+          const origin = document.createElement('span');
+          origin.className = 'ref-origin';
+          origin.textContent = '· ' + NORM_LABELS[norm];
+          clone.appendChild(origin);
+          list.appendChild(clone);
+        });
+        box.appendChild(list);
+        td.appendChild(box);
+      });
+      // Frameworks of this family with no criterion in this domain
+      const missing = VIEW_NORMS[view].filter(n => !row.querySelector(`td.col-${n} .ref-item`));
+      if (missing.length) {
+        const e = document.createElement('div');
+        e.className = 'empty-cell group-empty';
+        const labels = missing.map(n => NORM_LABELS[n]).join(', ');
+        e.dataset.fr = `— ${i18n.fr.not_covered} ${labels}`;
+        e.dataset.en = `— ${i18n.en.not_covered} ${labels}`;
+        e.textContent = e.dataset.fr;
+        td.appendChild(e);
+      }
+      tr.appendChild(td);
+      body.appendChild(tr);
+    });
+    const nr = document.createElement('tr');
+    nr.className = 'no-results-row';
+    nr.innerHTML = '<td colspan="2"><div class="no-results"><span data-i18n="no_results">' + i18n.fr.no_results + '</span></div></td>';
+    body.appendChild(nr);
+    document.getElementById('groupTh').dataset.i18n = 'th_group_' + view;
+  }
+
+  function setView(view, btn) {
+    activeView = view;
+    document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const isMatrix = view === 'matrix';
+    document.getElementById('mainTable').parentElement.hidden = !isMatrix;
+    document.getElementById('groupWrap').hidden = isMatrix;
+    document.getElementById('viewNote').hidden = isMatrix;
+    if (!isMatrix) {
+      buildGroupView(view);
+      applyLang(currentLang);
+      updateColumns();
+      filterDomain(activeDomain, document.querySelector('.filters:not(.views) .filter-btn.active'));
+    }
   }
 </script>
 

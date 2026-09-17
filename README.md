@@ -61,6 +61,7 @@ The name is a deliberate play on words: **Rosetta** (the Stone that unlocked mul
 ## Features
 
 - **🔍 Domain filtering** — display only the domains relevant to your context (Governance, Risk, Technical, Cyber Ops, AI…)
+- **🧩 Combined views (IT / Cyber / AI)** — switch from the matrix to a consolidated view of one framework family, where the criteria of each domain are grouped into coherent sub-domains, each criterion keeping its code and its framework of origin
 - **👁️ Column toggle** — hide any framework column with a single click to focus on what matters
 - **🌙 Light / dark theme** — instant toggle between both display modes
 - **🌐 Bilingual FR / EN** — the full interface and all control labels are translated using the official wording of each framework
@@ -88,15 +89,32 @@ Copy the `index.html` file localy or directly into your internal portal. No exte
 rosettable.html          ← single self-contained file
 │
 ├── CSS                  ← light theme + dark theme (CSS custom properties)
-├── HTML                 ← table structure, 17 rows × 9 framework columns
+├── HTML                 ← matrix table, 17 rows × 9 framework columns + combined-view table (rendered by JS)
 └── JavaScript
     ├── toggleTheme()    ← light / dark mode switch
     ├── toggleLanguage() ← FR / EN switch (full i18n)
     ├── toggleNorm()     ← column visibility by framework
-    └── filterDomain()   ← row filtering by domain
+    ├── filterDomain()   ← row filtering by domain
+    ├── setView()        ← Matrix / IT / Cyber / AI view switch
+    └── VIEWS            ← sub-domain groupings per domain and family; criteria are referenced by
+                            [framework, code] and their labels are read from the matrix cells
 ```
 
 **Dependencies:** none. Google Fonts loaded via CDN (optional — falls back to system fonts when offline).
+
+---
+
+## Combined Views
+
+The **IT**, **Cyber** and **AI** buttons replace the matrix with a consolidated view of one framework family:
+
+| View | Frameworks combined |
+|---|---|
+| IT | ITIL v4, COBIT 2019 |
+| Cyber | NIST CSF 2.0, ISO 27001:2022, CIS Controls v8 |
+| AI | ISO 42001:2023, NIST AI RMF 1.0, NIST IR 8596 Cyber AI Profile, EU AI Act |
+
+For each of the 17 domains, the criteria of the family are grouped into three to five **sub-domains** ordered in a consistent reading sense (framework and governance → identification and assessment → treatment and controls → monitoring and improvement). Every criterion appears exactly once and keeps its code and its framework of origin. The sub-domain grouping is an editorial proposal by Rosettable, not a structure defined by the standards. Domain filters and framework toggles apply to the combined views as well.
 
 ---
 
